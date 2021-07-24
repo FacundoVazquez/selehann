@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from './infrastructure/database/database.module';
 import { UsersModule } from './infrastructure/users/users.module';
-import { UsersController } from './app/users/users.controller';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
-  imports: [UsersModule],
-  controllers: [UsersController],
+  imports: [LoggerModule.forRoot(), DatabaseModule, UsersModule],
 })
 export class AppModule {}
