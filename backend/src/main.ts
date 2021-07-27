@@ -1,25 +1,34 @@
+import { LoggerService, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as env from 'dotenv';
 import { Logger } from 'nestjs-pino';
-import { AppModule } from './app.module';
-import { config } from './infrastructure/config/app.config';
+import { AppModule } from 'src/app/app.module';
+import { configuration, settings } from 'src/app/config/configuration/config';
+import { ExceptionsFilter } from './app/config/filters/exceptions.filter';
+import { LoggingInterceptor } from './app/config/interceptors/logging.interceptor';
+import { setupSwagger } from './app/config/swagger';
 
 declare const module: any;
 
-function setup() {
-  env.config();
-}
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, config.options);
+  const app = await NestFactory.create(AppModule, settings.options);
 
-  config.options?.logger === false && app.useLogger(app.get(Logger));
+  settings.options?.logger === false && app.useLogger(app.get(Logger));
 
-  config.globals.filters.forEach((f) => app.useGlobalFilters(f));
-  config.globals.interceptors.forEach((i) => app.useGlobalInterceptors(i));
-  config.globals.pipes.forEach((p) => app.useGlobalPipes(p));
+  const logger = app.get<Logger>(Logger);
+  app.useLogger(logger);
+  settings.options.logger = logger as LoggerService;
 
-  await app.listen(3000);
+  app.useGlobalFilters(new ExceptionsFilter(logger));
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  /*   settings.globals.filters.forEach((f) => app.useGlobalFilters(f));
+  settings.globals.interceptors.forEach((i) => app.useGlobalInterceptors(i));
+  settings.globals.pipes.forEach((p) => app.useGlobalPipes(p)); */
+
+  setupSwagger(app);
+
+  await app.listen(configuration.port);
   console.log(`Application is running on: ${await app.getUrl()}`);
 
   // Hot module
@@ -29,5 +38,4 @@ async function bootstrap() {
   }
 }
 
-setup();
 bootstrap();
