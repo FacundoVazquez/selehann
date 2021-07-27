@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { removeUndefinedProperties } from 'src/app/config/utils/objects.utils';
 import { Id } from 'src/app/interfaces';
+import { LoginDto } from 'src/features/auth/application/dto';
 import { UserMapping } from 'src/features/users/application/mapping/user.mapping';
 import { User } from 'src/features/users/domain/entity/user.entity';
 import { IUserRepository } from 'src/features/users/domain/repository/user.repository';
@@ -47,5 +48,11 @@ export class UserRepository implements IUserRepository {
     const filter = removeUndefinedProperties(entity);
     const result = await this.userModel.deleteMany(filter);
     return result.ok === 1;
+  }
+
+  async validateUser(loginDto: LoginDto): Promise<boolean> {
+    const { username, password } = loginDto;
+    const result = await (await this.userModel.findOne({ username })).validatePassword(password);
+    return result;
   }
 }

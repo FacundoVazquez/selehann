@@ -12,5 +12,6 @@ import { UserRepositoryProvider } from '../repository/user.repository.provider';
   imports: [MongooseModule.forFeature([{ name: User.name, schema: userSchema }])],
   controllers: [UserController],
   providers: [UserMapping, UserProfile, UserService, UserRepositoryProvider],
+  exports: [UserService, MongooseModule],
 })
 export class UsersModule {}

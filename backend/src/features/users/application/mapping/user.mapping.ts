@@ -1,15 +1,16 @@
 import { InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
-import { User } from '../../domain/entity/user.entity';
+import { plainToClass } from 'class-transformer';
+import { IUser, User } from '../../domain/entity/user.entity';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../dto';
 
 @Injectable()
 export class UserMapping {
   constructor(@InjectMapper() private readonly mapper: Mapper) {}
 
-  getUser(user: UserDto): User {
-    return this.mapper.map(user, User, UserDto);
+  getUser(user: IUser): User {
+    return plainToClass(User, user);
   }
 
   getUserDto(user: User): UserDto {

@@ -14,13 +14,13 @@ async function bootstrap() {
 
   settings.options?.logger === false && app.useLogger(app.get(Logger));
 
-  /*   const logger = app.get<Logger>(Logger);
+  const logger = app.get<Logger>(Logger);
   app.useLogger(logger);
   settings.options.logger = logger as LoggerService;
 
   app.useGlobalFilters(new ExceptionsFilter(logger));
   app.useGlobalInterceptors(new LoggingInterceptor());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true })); */
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   /*   settings.globals.filters.forEach((f) => app.useGlobalFilters(f));
   settings.globals.interceptors.forEach((i) => app.useGlobalInterceptors(i));

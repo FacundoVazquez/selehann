@@ -54,7 +54,7 @@ async function normalizeQuery() {
 
 userSchema.pre(/find|findOne|findOneAndUpdate|deleteOne|deleteMany/, normalizeQuery);
 
-userSchema.methods.verifyPassword = function (submittedPassword) {
+userSchema.methods.validatePassword = function (submittedPassword) {
   return verifyPassword(this.password, this.salt, submittedPassword);
 };
 

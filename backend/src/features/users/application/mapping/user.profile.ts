@@ -28,7 +28,6 @@ export class UserProfile extends AutomapperProfile {
 
       mapper
         .createMap(FindOneUserDto, User)
-        .forMember((d) => d.username, ignore())
         .forMember((d) => d.password, ignore())
         .forMember((d) => d.role, ignore());
 
@@ -52,37 +51,5 @@ export class UserProfile extends AutomapperProfile {
         .forMember((d) => d.username, ignore())
         .forMember((d) => d.password, ignore());
     };
-  }
-
-  getUser(user: UserDto): User {
-    return this.mapper.map(user, User, UserDto);
-  }
-
-  getUserDto(user: User): UserDto {
-    return this.mapper.map(user, UserDto, User);
-  }
-
-  getUserFromCreateUser(dto: CreateUserDto): Partial<User> {
-    return this.mapper.map(dto, User, CreateUserDto);
-  }
-
-  getUserFindOneUser(dto: FindOneUserDto): Partial<User> {
-    return this.mapper.map(dto, User, FindOneUserDto);
-  }
-
-  getUserFindManyUser(dto: FindManyUserDto): Partial<User> {
-    return this.mapper.map(dto, User, FindManyUserDto);
-  }
-
-  getUserDeleteOneUser(dto: DeleteOneUserDto): Partial<User> {
-    return this.mapper.map(dto, User, DeleteOneUserDto);
-  }
-
-  getUserDeleteManyUser(dto: DeleteManyUserDto): Partial<User> {
-    return this.mapper.map(dto, User, DeleteManyUserDto);
-  }
-
-  getUserUpdateUser(dto: UpdateUserDto): Partial<User> {
-    return this.mapper.map(dto, User, UpdateUserDto);
   }
 }

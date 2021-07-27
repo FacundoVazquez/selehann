@@ -11,7 +11,7 @@ export interface ObjectLiteral {
   [key: string]: any;
 }
 
-export type Id = Pick<Entity, 'id'>['id'];
+export type Id = Entity['id'];
 
 export interface IRepository<T extends Entity> {
   create(entity: Partial<T>): Promise<T>;
