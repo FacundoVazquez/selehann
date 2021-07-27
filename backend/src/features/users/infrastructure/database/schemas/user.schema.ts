@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { hashPasswordAsync, verifyPassword } from 'src/app/config/crypto';
-import { Role } from 'src/features/users/domain/entity/role.enum';
-import { IUser } from 'src/features/users/domain/entity/userModel';
+import { Role } from 'src/features/users/domain/roles/role.enum';
+import { IUser } from 'src/features/users/domain/entity/user.entity';
 import * as mongoosePaginate from 'mongoose-paginate';
 import * as uniqueValidator from 'mongoose-unique-validator';
 import * as normalize from 'normalize-mongoose';

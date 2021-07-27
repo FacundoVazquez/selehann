@@ -5,7 +5,7 @@ import { UserController } from 'src/features/users/infrastructure/adapters/contr
 import { userSchema } from 'src/features/users/infrastructure/database/schemas/user.schema';
 import { UserMapping } from '../../application/mapping/user.mapping';
 import { UserProfile } from '../../application/mapping/user.profile';
-import { User } from '../../domain/entity/userModel';
+import { User } from '../../domain/entity/user.entity';
 import { UserRepositoryProvider } from '../repository/user.repository.provider';
 
 @Module({

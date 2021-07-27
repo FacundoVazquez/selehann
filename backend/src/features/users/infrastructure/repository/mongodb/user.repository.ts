@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { removeUndefinedProperties } from 'src/app/config/utils/objects.utils';
 import { Id } from 'src/app/interfaces';
 import { UserMapping } from 'src/features/users/application/mapping/user.mapping';
-import { User } from 'src/features/users/domain/entity/userModel';
+import { User } from 'src/features/users/domain/entity/user.entity';
 import { IUserRepository } from 'src/features/users/domain/repository/user.repository';
 import { UserDocument } from '../../database/schemas/user.schema';
 

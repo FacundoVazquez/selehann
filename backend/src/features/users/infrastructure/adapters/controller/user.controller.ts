@@ -1,11 +1,11 @@
 import { MapInterceptor } from '@automapper/nestjs';
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
 import { UserService } from 'src/features/users/application/service/user.service';
-import { User } from 'src/features/users/domain/entity/userModel';
+import { User } from 'src/features/users/domain/entity/user.entity';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../../../application/dto';
-import { ApiTags, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
