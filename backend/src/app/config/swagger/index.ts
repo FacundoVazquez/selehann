@@ -3,7 +3,7 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 import { capitalize } from 'lodash';
-import { configuration } from '../configuration/config';
+import { configuration } from '../configuration/configuration';
 
 export interface SwaggerOptions {
   enabled: boolean;
@@ -21,7 +21,7 @@ export const setupSwagger = (app: INestApplication, config?: SwaggerOptions) => 
     title: `Swagger - ${capitalize(name as string)}`,
     description: `${description}`,
     version,
-    path: process.env.SWAGGER_PATH ?? '/api/swagger',
+    path: process.env.SWAGGER_PATH ?? 'api/swagger',
     optionsUI: {
       swaggerOptions: {
         filter: true,
@@ -49,5 +49,7 @@ export const setupSwagger = (app: INestApplication, config?: SwaggerOptions) => 
     });
 
     SwaggerModule.setup(path, app, document, swagger.optionsUI);
+
+    return swagger;
   }
 };

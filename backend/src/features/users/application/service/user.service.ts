@@ -3,7 +3,7 @@ import { IUserRepository } from '../../domain/repository/user.repository';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto } from '../dto';
 import { UserMapping } from '../mapping/user.mapping';
 
-@Injectable({})
+@Injectable()
 export class UserService {
   constructor(private readonly userMapping: UserMapping, @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository) {}
 

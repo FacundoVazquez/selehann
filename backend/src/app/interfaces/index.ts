@@ -3,7 +3,7 @@ export interface Persistable {
   updatedAt: string;
 }
 
-export interface Entity extends Persistable {
+export interface Entity {
   id: string;
 }
 

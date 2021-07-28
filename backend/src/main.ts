@@ -1,35 +1,28 @@
-import { LoggerService, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from 'src/app/app.module';
-import { configuration, settings } from 'src/app/config/configuration/config';
-import { ExceptionsFilter } from './app/config/filters/exceptions.filter';
-import { LoggingInterceptor } from './app/config/interceptors/logging.interceptor';
+import { options, setupGlobalOptions } from './app/config/config';
+import { configuration } from './app/config/configuration/configuration';
 import { setupSwagger } from './app/config/swagger';
 
 declare const module: any;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, settings.options);
-
-  settings.options?.logger === false && app.useLogger(app.get(Logger));
+  const app = await NestFactory.create(AppModule, options);
 
   const logger = app.get<Logger>(Logger);
   app.useLogger(logger);
-  settings.options.logger = logger as LoggerService;
 
-  app.useGlobalFilters(new ExceptionsFilter(logger));
-  app.useGlobalInterceptors(new LoggingInterceptor());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  const globalOptions = setupGlobalOptions(logger);
+  globalOptions.filters.forEach((f) => app.useGlobalFilters(f));
+  globalOptions.interceptors.forEach((i) => app.useGlobalInterceptors(i));
+  globalOptions.pipes.forEach((p) => app.useGlobalPipes(p));
 
-  /*   settings.globals.filters.forEach((f) => app.useGlobalFilters(f));
-  settings.globals.interceptors.forEach((i) => app.useGlobalInterceptors(i));
-  settings.globals.pipes.forEach((p) => app.useGlobalPipes(p)); */
-
-  setupSwagger(app);
+  const swagger = setupSwagger(app);
 
   await app.listen(configuration.port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  logger.log(`Application is running on: ${await app.getUrl()}`);
+  if (swagger.enabled) logger.log(`Swagger is running on: ${await app.getUrl()}/${swagger.path}`);
 
   // Hot module
   if (module.hot) {

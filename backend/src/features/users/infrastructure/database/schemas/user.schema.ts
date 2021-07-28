@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { hashPasswordAsync, verifyPassword } from 'src/app/config/crypto';
-import { Role } from 'src/features/users/domain/roles/role.enum';
-import { IUser } from 'src/features/users/domain/entity/user.entity';
 import * as mongoosePaginate from 'mongoose-paginate';
 import * as uniqueValidator from 'mongoose-unique-validator';
 import * as normalize from 'normalize-mongoose';
+import { hashPasswordAsync, verifyPassword } from 'src/app/config/crypto';
 import { BaseDocument } from 'src/app/config/database/interfaces';
-import { removeUndefinedProperties } from 'src/app/config/utils/objects.utils';
+import { normalizeQuery } from 'src/app/config/database/mongo/mongo.utils';
+import { IUser } from 'src/features/users/domain/entity/user.entity';
+import { Role } from 'src/features/users/domain/roles/role.enum';
 
 @Schema({ versionKey: false, timestamps: { createdAt: true, updatedAt: true } })
 export class UserDocument extends BaseDocument implements IUser {
-  @Prop({ required: true, index: 1 })
+  @Prop({ required: true, unique: true, index: 1 })
   username: string;
 
   @Prop({ required: true })
@@ -45,12 +45,6 @@ userSchema.pre('validate', function (next) {
     return next();
   }
 });
-
-async function normalizeQuery() {
-  const { id, ...rest } = this.getQuery() || {};
-  const filter = removeUndefinedProperties({ _id: id, ...rest });
-  this.setQuery(filter);
-}
 
 userSchema.pre(/find|findOne|findOneAndUpdate|deleteOne|deleteMany/, normalizeQuery);
 

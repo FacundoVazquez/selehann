@@ -1,9 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { Entity } from 'src/app/interfaces';
+import { Entity, Persistable } from 'src/app/interfaces';
 import { Role } from '../roles/role.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
-export interface IUser extends Entity {
+export interface IUser extends Entity, Persistable {
   username: string;
   password: string;
   salt: string;

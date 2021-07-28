@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { removeUndefinedProperties } from 'src/app/config/utils/objects.utils';
 import { Id } from 'src/app/interfaces';
 import { LoginDto } from 'src/features/auth/application/dto';
 import { UserMapping } from 'src/features/users/application/mapping/user.mapping';
@@ -15,21 +14,23 @@ export class UserRepository implements IUserRepository {
 
   async create(entity: Partial<User>): Promise<User> {
     const submittedUser = new this.userModel(entity);
+    console.log('*******************');
     const result = (await submittedUser.save())?.toJSON();
+    console.log('*******************', result);
     const user = this.userMapping.getUser(result);
     return user;
   }
 
   async findOne(entity: Partial<User>): Promise<User> {
-    const filter = removeUndefinedProperties(entity);
-    const result = (await this.userModel.findOne(filter))?.toJSON();
+    console.log(entity);
+    const result = (await this.userModel.findOne(entity))?.toJSON();
     const user = this.userMapping.getUser(result);
     return user;
   }
 
   async findMany(entity: Partial<User>): Promise<User[]> {
-    const filter = removeUndefinedProperties(entity);
-    const users = (await this.userModel.find(filter))?.map((u) => this.userMapping.getUser(u.toJSON()));
+    console.log(entity);
+    const users = (await this.userModel.find(entity))?.map((u) => this.userMapping.getUser(u.toJSON()));
     return users;
   }
 
@@ -45,14 +46,13 @@ export class UserRepository implements IUserRepository {
   }
 
   async deleteMany(entity: Partial<User>): Promise<boolean> {
-    const filter = removeUndefinedProperties(entity);
-    const result = await this.userModel.deleteMany(filter);
+    const result = await this.userModel.deleteMany(entity);
     return result.ok === 1;
   }
 
   async validateUser(loginDto: LoginDto): Promise<boolean> {
     const { username, password } = loginDto;
-    const result = await (await this.userModel.findOne({ username })).validatePassword(password);
+    const result = (await this.userModel.findOne({ username })).validatePassword(password);
     return result;
   }
 }
