@@ -9,6 +9,7 @@ export interface ObjectConfiguration {
   };
   swagger: {
     enabled: boolean;
+    path: string;
   };
   origin: string;
   [key: string]: any;

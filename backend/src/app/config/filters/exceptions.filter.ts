@@ -1,35 +1,37 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, LoggerService } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Logger } from 'nestjs-pino';
+import { Error } from 'mongoose';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
   constructor(private readonly logger: LoggerService) {}
 
   catch(exception: Error, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
-    const response = ctx.getResponse<Response>();
+    const httpContext = host.switchToHttp();
+    const request = httpContext.getRequest<Request>();
+    const response = httpContext.getResponse<Response>();
 
-    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const internalMessage = exception.message;
-    const message = exception.message ?? 'An error occurred on the server!';
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = exception.message ?? 'An error occurred on the server!';
 
-    console.log(exception);
-    /*  if (exception instanceof HttpException)
-      if (typeof exception.getResponse() === 'string') message = exception.getResponse().toString();
-      else message = (exception.getResponse() as any)?.message;
-    if (exception instanceof MongoError) message = exception.message; */
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+    } else if (exception instanceof Error.ValidationError) {
+      status = HttpStatus.UNPROCESSABLE_ENTITY;
+      message = 'Data validation has failed!';
+    }
 
-    console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    const shouldLog = status >= 400;
+    const isServerError = status >= 500;
 
-    this.logger.error(internalMessage, exception.stack, ExceptionsFilter.name);
-
-    console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    if (shouldLog)
+      if (isServerError) this.logger.error('Request failed', exception.stack, ExceptionsFilter.name);
+      else this.logger.warn(`Request failed (${exception.message})`, ExceptionsFilter.name);
 
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
+      method: request.method,
       path: request.url,
       message,
     });

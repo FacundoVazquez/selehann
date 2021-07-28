@@ -7,8 +7,8 @@ import { NestApplicationGlobalOptions } from './types';
 export function setupGlobalOptions(logger: LoggerService): NestApplicationGlobalOptions {
   return {
     filters: [new ExceptionsFilter(logger)],
-    interceptors: [new LoggingInterceptor()],
-    pipes: [new ValidationPipe({ whitelist: true })],
+    interceptors: [new LoggingInterceptor(logger)],
+    pipes: [new ValidationPipe({ whitelist: true, transform: true })],
   };
 }
 

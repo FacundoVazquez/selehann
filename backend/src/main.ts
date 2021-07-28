@@ -1,3 +1,4 @@
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from 'src/app/app.module';
@@ -15,8 +16,9 @@ async function bootstrap() {
 
   const globalOptions = setupGlobalOptions(logger);
   globalOptions.filters.forEach((f) => app.useGlobalFilters(f));
-  globalOptions.interceptors.forEach((i) => app.useGlobalInterceptors(i));
+  //globalOptions.interceptors.forEach((i) => app.useGlobalInterceptors(i));
   globalOptions.pipes.forEach((p) => app.useGlobalPipes(p));
+  //app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const swagger = setupSwagger(app);
 

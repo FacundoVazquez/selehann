@@ -1,13 +1,14 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, LoggerService, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Before...');
+  constructor(private readonly logger: LoggerService) {}
 
-    const now = Date.now();
-    return next.handle().pipe(tap(() => console.log(`After... ${Date.now() - now}ms`)));
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+    this.logger.log('Request');
+
+    return next.handle().pipe(tap());
   }
 }

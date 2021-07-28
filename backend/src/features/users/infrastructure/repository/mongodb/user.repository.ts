@@ -14,9 +14,7 @@ export class UserRepository implements IUserRepository {
 
   async create(entity: Partial<User>): Promise<User> {
     const submittedUser = new this.userModel(entity);
-    console.log('*******************');
     const result = (await submittedUser.save())?.toJSON();
-    console.log('*******************', result);
     const user = this.userMapping.getUser(result);
     return user;
   }

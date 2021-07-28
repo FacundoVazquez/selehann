@@ -32,6 +32,7 @@ export const configuration: ObjectConfiguration = {
       } catch (err) {}
       throw new ConfigurationError(`Invalid swagger status: ${value}`);
     })() as boolean,
+    path: process.env.SWAGGER_PATH,
   },
   origin: process.env.ORIGIN,
 };

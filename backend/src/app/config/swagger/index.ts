@@ -17,11 +17,11 @@ export interface SwaggerOptions {
 export const setupSwagger = (app: INestApplication, config?: SwaggerOptions) => {
   const { name, description, version } = require('../../../../package.json');
   const swagger: SwaggerOptions = {
-    enabled: configuration.swagger,
+    enabled: configuration.swagger.enabled,
     title: `Swagger - ${capitalize(name as string)}`,
     description: `${description}`,
     version,
-    path: process.env.SWAGGER_PATH ?? 'api/swagger',
+    path: configuration.swagger.path ?? 'api/swagger',
     optionsUI: {
       swaggerOptions: {
         filter: true,

@@ -14,7 +14,6 @@ export class UserController {
   @UseInterceptors(MapInterceptor(UserDto, User))
   //@UseGuards(JwtAuthGuard)
   async create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.userService.createUser(createUserDto);
   }
 
