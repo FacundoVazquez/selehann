@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, LoggerService } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Error } from 'mongoose';
+import { JsonResponse } from './types';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
@@ -24,16 +25,20 @@ export class ExceptionsFilter implements ExceptionFilter {
     const shouldLog = status >= 400;
     const isServerError = status >= 500;
 
-    if (shouldLog)
-      if (isServerError) this.logger.error('Request failed', exception.stack, ExceptionsFilter.name);
-      else this.logger.warn(`Request failed (${exception.message})`, ExceptionsFilter.name);
+    if (shouldLog) {
+      const message = 'Request failed';
+      if (isServerError) this.logger.error(message, exception.stack, ExceptionsFilter.name);
+      else this.logger.warn(`${message} (${exception.message})`, ExceptionsFilter.name);
+    }
 
-    response.status(status).json({
+    const json: JsonResponse = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       method: request.method,
       path: request.url,
-      message,
-    });
+      message: message,
+    };
+
+    response.status(status).json(json);
   }
 }

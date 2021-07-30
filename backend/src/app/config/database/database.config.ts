@@ -1,8 +1,9 @@
 import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { configuration } from '../configuration/configuration';
 
-export const uri = 'mongodb+srv://admin:admin@cluster0.ohs1t.mongodb.net';
 export const options: MongooseModuleOptions = {
-  dbName: 'test',
+  uri: configuration.databases.mongo[0].options.uri,
+  dbName: configuration.databases.mongo[0].options.dbName,
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,

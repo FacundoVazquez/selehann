@@ -1,0 +1,10 @@
+[
+  {
+    "role": "admin",
+    "active": true
+  },
+  {
+    "role": "user",
+    "active": true
+  }
+]

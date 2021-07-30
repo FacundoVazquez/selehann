@@ -1,9 +1,7 @@
-import { MapInterceptor } from '@automapper/nestjs';
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
-import { UserService } from 'src/features/users/application/service/user.service';
-import { User } from 'src/features/users/domain/entity/user.entity';
-import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../../../application/dto';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { UserService } from 'src/features/users/application/service/user.service';
+import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../../../application/dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -11,27 +9,23 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseInterceptors(MapInterceptor(UserDto, User))
   //@UseGuards(JwtAuthGuard)
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     return this.userService.createUser(createUserDto);
   }
 
   @Get(':id')
-  @UseInterceptors(MapInterceptor(UserDto, User))
-  async findOne(@Param() findOneUserDto: FindOneUserDto) {
+  async findOne(@Param() findOneUserDto: FindOneUserDto): Promise<UserDto> {
     return this.userService.findUser(findOneUserDto);
   }
 
   @Get()
-  @UseInterceptors(MapInterceptor(UserDto, User, { isArray: true }))
-  async findMany(@Query() findManyUserDto: FindManyUserDto) {
+  async findMany(@Query() findManyUserDto: FindManyUserDto): Promise<UserDto[]> {
     return this.userService.findUsers(findManyUserDto);
   }
 
   @Put(':id')
-  @UseInterceptors(MapInterceptor(UserDto, User))
-  async update(@Param() findOneUserDto: FindOneUserDto, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param() findOneUserDto: FindOneUserDto, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
     return this.userService.updateUser(findOneUserDto, updateUserDto);
   }
 

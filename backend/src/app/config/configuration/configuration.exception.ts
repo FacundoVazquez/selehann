@@ -1,8 +1,8 @@
-const CONFIGURATION_ERROR = 'ConfigurationError';
+const CONFIGURATION_EXCEPTION = 'ConfigurationException';
 
-export class ConfigurationError extends Error {
+export class ConfigurationException extends Error {
   constructor(message: string) {
     super(message);
-    this.name = CONFIGURATION_ERROR;
+    this.name = CONFIGURATION_EXCEPTION;
   }
 }

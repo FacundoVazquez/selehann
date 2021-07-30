@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate';
 import * as uniqueValidator from 'mongoose-unique-validator';
 import * as normalize from 'normalize-mongoose';
 import { hashPasswordAsync, verifyPassword } from 'src/app/config/crypto';
 import { BaseDocument } from 'src/app/config/database/interfaces';
 import { normalizeQuery } from 'src/app/config/database/mongo/mongo.utils';
+import { Role } from 'src/features/users/domain/entity/role.entity';
 import { IUser } from 'src/features/users/domain/entity/user.entity';
-import { Role } from 'src/features/users/domain/roles/role.enum';
 
 @Schema({ versionKey: false, timestamps: { createdAt: true, updatedAt: true } })
 export class UserDocument extends BaseDocument implements IUser {
@@ -19,10 +20,10 @@ export class UserDocument extends BaseDocument implements IUser {
   @Prop({ required: true })
   salt: string;
 
-  @Prop({ required: true, enum: Object.values(Role), type: String })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Role' })
   role: Role;
 
-  validatePassword: (submittedPassword: string) => boolean;
+  verifyPassword: (submittedPassword: string) => boolean;
 }
 
 const userSchema = SchemaFactory.createForClass(UserDocument);
@@ -30,6 +31,8 @@ const userSchema = SchemaFactory.createForClass(UserDocument);
 userSchema.plugin(mongoosePaginate);
 userSchema.plugin(uniqueValidator);
 userSchema.plugin(normalize);
+
+userSchema.pre(/find|findOne|findOneAndUpdate|deleteOne|deleteMany/, normalizeQuery);
 
 userSchema.pre('validate', function (next) {
   if (this.isModified('password') || this.isNew) {
@@ -46,9 +49,7 @@ userSchema.pre('validate', function (next) {
   }
 });
 
-userSchema.pre(/find|findOne|findOneAndUpdate|deleteOne|deleteMany/, normalizeQuery);
-
-userSchema.methods.validatePassword = function (submittedPassword) {
+userSchema.methods.verifyPassword = function (submittedPassword) {
   return verifyPassword(this.password, this.salt, submittedPassword);
 };
 

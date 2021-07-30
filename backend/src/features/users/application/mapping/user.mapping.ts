@@ -2,6 +2,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
+import { Role } from '../../domain/entity/role.entity';
 import { IUser, User } from '../../domain/entity/user.entity';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../dto';
 
@@ -17,8 +18,8 @@ export class UserMapping {
     return this.mapper.map(user, UserDto, User);
   }
 
-  getUserFromCreateUser(dto: CreateUserDto): Partial<User> {
-    return this.mapper.map(dto, User, CreateUserDto);
+  getUserFromCreateUser(dto: CreateUserDto, role: Role): Partial<User> {
+    return this.mapper.map(dto, User, CreateUserDto, { extraArguments: { role } });
   }
 
   getUserFindOneUser(dto: FindOneUserDto): Partial<User> {

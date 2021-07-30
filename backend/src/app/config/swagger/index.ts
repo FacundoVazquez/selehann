@@ -21,7 +21,7 @@ export const setupSwagger = (app: INestApplication, config?: SwaggerOptions) => 
     title: `Swagger - ${capitalize(name as string)}`,
     description: `${description}`,
     version,
-    path: configuration.swagger.path ?? 'api/swagger',
+    path: configuration.swagger.path,
     optionsUI: {
       swaggerOptions: {
         filter: true,

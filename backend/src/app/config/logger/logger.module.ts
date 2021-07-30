@@ -2,7 +2,7 @@ import { LoggerModule as LoggerPinoModule } from 'nestjs-pino';
 import { configuration } from '../configuration/configuration';
 import { hideSensibilityData } from './logger.utils';
 
-const MAX_VALUE = 999999;
+const ID_MAX_VALUE = 999999;
 let id = 0;
 
 export const LoggerModule = LoggerPinoModule.forRoot({
@@ -12,7 +12,7 @@ export const LoggerModule = LoggerPinoModule.forRoot({
       return (
         Buffer.from(`${req.socket.remoteAddress}${req.socket.remotePort}`).toString('base64') +
         ':' +
-        `${id++ % (MAX_VALUE + 1)}`.padStart(MAX_VALUE.toString().length, '0')
+        `${id++ % (ID_MAX_VALUE + 1)}`.padStart(ID_MAX_VALUE.toString().length, '0')
       );
     },
     customSuccessMessage: () => 'Response',

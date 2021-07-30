@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/features/users/domain/entity/user.entity';
 import { Password, Username } from 'src/features/users/domain/repository/user.repository';
-import { UserDocument } from 'src/features/users/infrastructure/database/schemas/user.schema';
+import { UserDocument } from 'src/features/users/infrastructure/repository/mongodb/schemas/user.schema';
 import { IAuthRepository } from '../../../domain/repository/auth.repository';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AuthRepository implements IAuthRepository {
 
   async validateUser(username: Username, password: Password): Promise<User> {
     const user = await this.userModel.findOne({ username });
-    if (user?.validatePassword(password)) return user;
+    if (user?.verifyPassword(password)) return user;
     return null;
   }
 

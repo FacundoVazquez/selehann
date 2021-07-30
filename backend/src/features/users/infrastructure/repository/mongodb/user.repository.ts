@@ -4,16 +4,28 @@ import { Model } from 'mongoose';
 import { Id } from 'src/app/interfaces';
 import { LoginDto } from 'src/features/auth/application/dto';
 import { UserMapping } from 'src/features/users/application/mapping/user.mapping';
+import { Role } from 'src/features/users/domain/entity/role.entity';
 import { User } from 'src/features/users/domain/entity/user.entity';
 import { IUserRepository } from 'src/features/users/domain/repository/user.repository';
-import { UserDocument } from '../../database/schemas/user.schema';
+import { RoleDocument } from './schemas/role.schema';
+import { UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private readonly userMapping: UserMapping) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Role.name) private readonly roleModel: Model<RoleDocument>,
+    private readonly userMapping: UserMapping,
+  ) {}
 
   async create(entity: Partial<User>): Promise<User> {
-    const submittedUser = new this.userModel(entity);
+    const { role, ...rest } = entity;
+    console.log(role.role);
+    const roleDoc = await this.roleModel.findOne({ role: role.role });
+    console.log(roleDoc);
+    const submittedUser = new this.userModel({ ...rest, role: roleDoc });
+    console.log(submittedUser);
+
     const result = (await submittedUser.save())?.toJSON();
     const user = this.userMapping.getUser(result);
     return user;
@@ -50,7 +62,7 @@ export class UserRepository implements IUserRepository {
 
   async validateUser(loginDto: LoginDto): Promise<boolean> {
     const { username, password } = loginDto;
-    const result = (await this.userModel.findOne({ username })).validatePassword(password);
+    const result = (await this.userModel.findOne({ username })).verifyPassword(password);
     return result;
   }
 }

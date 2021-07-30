@@ -1,4 +1,4 @@
-import { ignore, mapFrom } from '@automapper/core';
+import { ignore, mapFrom, mapWithArguments } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
@@ -15,7 +15,10 @@ export class UserProfile extends AutomapperProfile {
     return (mapper: Mapper) => {
       mapper.createMap(UserDto, User).forMember((d) => d.password, ignore());
 
-      mapper.createMap(User, UserDto);
+      mapper.createMap(User, UserDto).forMember(
+        (d) => d.role,
+        mapFrom((s) => s.role.role),
+      );
       /* 
         .beforeMap((s, d) => {
           console.log('Mapped Init', s, d);
@@ -24,7 +27,13 @@ export class UserProfile extends AutomapperProfile {
           console.log('Mapped OK', s, d);
         }); */
 
-      mapper.createMap(CreateUserDto, User).forMember((d) => d.id, ignore());
+      mapper
+        .createMap(CreateUserDto, User)
+        .forMember((d) => d.id, ignore())
+        .forMember(
+          (d) => d.role,
+          mapWithArguments<CreateUserDto, User>((s, { role }) => role),
+        );
 
       mapper
         .createMap(FindOneUserDto, User)

@@ -11,11 +11,17 @@ const uri = 'mongodb+srv://admin:admin@cluster0.ohs1t.mongodb.net/test?retryWrit
   });
   */
 
+/* 
 const uri = 'mongodb+srv://admin:admin@cluster0.ohs1t.mongodb.net/test';
 
 export const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
-    useFactory: (): Promise<typeof mongoose> => mongoose.connect(uri, { useNewUrlParser: true }),
+    useFactory: (): Promise<typeof mongoose> =>
+      mongoose.connect(uri, { useNewUrlParser: true }).then((mongoose) => {
+        console.log('Connection ready! *******************************');
+        return mongoose;
+      }),
   },
 ];
+ */

@@ -8,7 +8,7 @@
         "options": {
           "classValidatorShim": true,
           "introspectComments": false,
-          "dtoFileNameSuffix": [".entity.ts", ".dto.ts"],
+          "dtoFileNameSuffix": [".dto.ts"],
           "controllerFileNameSuffix": [".controller.ts"]
         }
       }

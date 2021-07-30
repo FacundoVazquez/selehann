@@ -1,39 +1,53 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IUserRepository } from '../../domain/repository/user.repository';
+import { IRoleRepository, IUserRepository } from '../../domain/repository/user.repository';
+import { ROLE_REPOSITORY } from '../../infrastructure/repository/role.repository.provider';
+import { USER_REPOSITORY } from '../../infrastructure/repository/user.repository.provider';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto } from '../dto';
 import { UserMapping } from '../mapping/user.mapping';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userMapping: UserMapping, @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository) {}
+  constructor(
+    private readonly userMapping: UserMapping,
+    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(ROLE_REPOSITORY) private readonly roleRepository: IRoleRepository,
+  ) {}
 
-  createUser(createUserDto: CreateUserDto) {
-    const user = this.userMapping.getUserFromCreateUser(createUserDto);
-    return this.userRepository.create(user);
+  async createUser(createUserDto: CreateUserDto) {
+    const role = await this.roleRepository.findOne({ role: createUserDto.role });
+    const partialUser = this.userMapping.getUserFromCreateUser(createUserDto, role);
+    const user = await this.userRepository.create(partialUser);
+    const userDto = this.userMapping.getUserDto(user);
+    return userDto;
   }
 
-  findUser(findOneUserDto: FindOneUserDto) {
-    const user = this.userMapping.getUserFindOneUser(findOneUserDto);
-    return this.userRepository.findOne(user);
+  async findUser(findOneUserDto: FindOneUserDto) {
+    const filter = this.userMapping.getUserFindOneUser(findOneUserDto);
+    const user = await this.userRepository.findOne(filter);
+    const userDto = this.userMapping.getUserDto(user);
+    return userDto;
   }
 
-  findUsers(findManyUserDto: FindManyUserDto) {
-    const user = this.userMapping.getUserFindManyUser(findManyUserDto);
-    return this.userRepository.findMany(user);
+  async findUsers(findManyUserDto: FindManyUserDto) {
+    const filter = this.userMapping.getUserFindManyUser(findManyUserDto);
+    const users = await this.userRepository.findMany(filter);
+    const usersDto = users.map((u) => this.userMapping.getUserDto(u));
+    return usersDto;
   }
 
-  updateUser(findOneUserDto: FindOneUserDto, updateUserDto: UpdateUserDto) {
+  async updateUser(findOneUserDto: FindOneUserDto, updateUserDto: UpdateUserDto) {
     const id = findOneUserDto.id;
     const user = this.userMapping.getUserUpdateUser(updateUserDto);
-    return this.userRepository.update(id, user);
+    const userDocument = await this.userRepository.update(id, user);
+    return this.userMapping.getUserDto(userDocument);
   }
 
-  deleteUser(deleteOneUserDto: DeleteOneUserDto) {
+  async deleteUser(deleteOneUserDto: DeleteOneUserDto) {
     const id = deleteOneUserDto.id;
     return this.userRepository.delete(id);
   }
 
-  deleteUsers(deleteManyUserDto: DeleteManyUserDto) {
+  async deleteUsers(deleteManyUserDto: DeleteManyUserDto) {
     const user = this.userMapping.getUserDeleteManyUser(deleteManyUserDto);
     return this.userRepository.deleteMany(user);
   }
