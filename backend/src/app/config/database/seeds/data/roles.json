@@ -1,10 +1,10 @@
 [
   {
-    "role": "admin",
+    "id": "admin",
     "active": true
   },
   {
-    "role": "user",
+    "id": "user",
     "active": true
   }
 ]

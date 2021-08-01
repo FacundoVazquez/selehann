@@ -3,5 +3,4 @@ import { Password, Username } from 'src/features/users/domain/repository/user.re
 
 export interface IAuthRepository {
   validateUser(username: Username, password: Password): Promise<User>;
-  login(user: User): Promise<string>;
 }

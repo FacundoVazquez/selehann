@@ -17,7 +17,7 @@ export class UserProfile extends AutomapperProfile {
 
       mapper.createMap(User, UserDto).forMember(
         (d) => d.role,
-        mapFrom((s) => s.role.role),
+        mapFrom((s) => s.roleId),
       );
       /* 
         .beforeMap((s, d) => {
@@ -31,17 +31,21 @@ export class UserProfile extends AutomapperProfile {
         .createMap(CreateUserDto, User)
         .forMember((d) => d.id, ignore())
         .forMember(
-          (d) => d.role,
+          (d) => d.roleId,
           mapWithArguments<CreateUserDto, User>((s, { role }) => role),
         );
 
       mapper
         .createMap(FindOneUserDto, User)
         .forMember((d) => d.password, ignore())
-        .forMember((d) => d.role, ignore());
+        .forMember((d) => d.roleId, ignore());
 
       mapper
         .createMap(FindManyUserDto, User)
+        .forMember(
+          (d) => d.roleId,
+          mapFrom((s) => s.role),
+        )
         .forMember((d) => d.id, ignore())
         .forMember((d) => d.username, ignore())
         .forMember((d) => d.password, ignore());
@@ -52,7 +56,7 @@ export class UserProfile extends AutomapperProfile {
         .createMap(DeleteOneUserDto, User)
         .forMember((d) => d.username, ignore())
         .forMember((d) => d.password, ignore())
-        .forMember((d) => d.role, ignore());
+        .forMember((d) => d.roleId, ignore());
 
       mapper
         .createMap(DeleteManyUserDto, User)

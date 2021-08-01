@@ -10,6 +10,15 @@ config();
 export const configuration: ObjectConfiguration = {
   port: parseInt(process.env.PORT, 10) || 3000,
   databases: {
+    logger: (() => {
+      const value = process.env.DATABASE_LOGGER_ENABLED;
+
+      try {
+        return parseBoolean(value);
+      } catch (err) {
+        throw new ConfigurationException(`Invalid database logger status: ${value}`);
+      }
+    })(),
     mongo: (() => {
       const values = { scheme: process.env.DATABASE_SCHEME, username: process.env.DATABASE_USERNAME, password: process.env.DATABASE_PASSWORD };
       const uri = buildMongoConnectionUri(process.env.DATABASE_URI, values);

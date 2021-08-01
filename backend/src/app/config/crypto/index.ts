@@ -1,4 +1,4 @@
-import { randomBytes, pbkdf2, pbkdf2Sync } from 'crypto';
+import { randomBytes, pbkdf2, pbkdf2Sync, randomUUID } from 'crypto';
 
 interface CryptoConfig {
   hashBytes: number;

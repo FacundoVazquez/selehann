@@ -6,6 +6,7 @@ import { RoleMapping } from 'src/features/users/application/mapping/role.mapping
 import { Role } from 'src/features/users/domain/entity/role.entity';
 import { IRoleRepository } from 'src/features/users/domain/repository/user.repository';
 import { RoleDocument } from './schemas/role.schema';
+import { Role as RoleEnum } from 'src/features/_shared/domain/roles/role.enum';
 
 @Injectable()
 export class RoleRepository implements IRoleRepository {
@@ -21,6 +22,7 @@ export class RoleRepository implements IRoleRepository {
   async findOne(entity: Partial<Role>): Promise<Role> {
     console.log(entity);
     const result = (await this.roleModel.findOne(entity))?.toJSON();
+    console.log('*******************', result);
     const role = this.roleMapping.getRole(result);
     return role;
   }
@@ -32,13 +34,13 @@ export class RoleRepository implements IRoleRepository {
   }
 
   async update(id: Id, entity: Partial<Role>): Promise<Role> {
-    const result = (await this.roleModel.findOneAndUpdate({ id }, entity, { returnOriginal: false }))?.toJSON();
+    const result = (await this.roleModel.findOneAndUpdate({ id: id as RoleEnum }, entity, { returnOriginal: false }))?.toJSON();
     const role = this.roleMapping.getRole(result);
     return role;
   }
 
   async delete(id: Id): Promise<boolean> {
-    const result = await this.roleModel.deleteOne({ id });
+    const result = await this.roleModel.deleteOne({ id: id as RoleEnum });
     return result.ok === 1;
   }
 

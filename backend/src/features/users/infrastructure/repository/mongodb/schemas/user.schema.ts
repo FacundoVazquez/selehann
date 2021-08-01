@@ -6,8 +6,9 @@ import * as normalize from 'normalize-mongoose';
 import { hashPasswordAsync, verifyPassword } from 'src/app/config/crypto';
 import { BaseDocument } from 'src/app/config/database/interfaces';
 import { normalizeQuery } from 'src/app/config/database/mongo/mongo.utils';
-import { Role } from 'src/features/users/domain/entity/role.entity';
+//import { Role } from 'src/features/users/domain/entity/role.entity';
 import { IUser } from 'src/features/users/domain/entity/user.entity';
+import { Role } from 'src/features/_shared/domain/roles/role.enum';
 
 @Schema({ versionKey: false, timestamps: { createdAt: true, updatedAt: true } })
 export class UserDocument extends BaseDocument implements IUser {
@@ -20,8 +21,8 @@ export class UserDocument extends BaseDocument implements IUser {
   @Prop({ required: true })
   salt: string;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Role' })
-  role: Role;
+  @Prop({ required: true, type: mongoose.Schema.Types.String, ref: 'Role' })
+  roleId: Role;
 
   verifyPassword: (submittedPassword: string) => boolean;
 }

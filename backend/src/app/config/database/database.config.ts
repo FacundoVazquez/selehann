@@ -1,4 +1,5 @@
 import { MongooseModuleOptions } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
 import { configuration } from '../configuration/configuration';
 
 export const options: MongooseModuleOptions = {
@@ -8,3 +9,5 @@ export const options: MongooseModuleOptions = {
   useCreateIndex: true,
   useFindAndModify: false,
 };
+
+mongoose.set('debug', configuration.databases.logger);

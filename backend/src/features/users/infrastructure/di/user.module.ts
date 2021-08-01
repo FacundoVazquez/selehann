@@ -22,6 +22,6 @@ import { UserRepositoryProvider } from '../repository/user.repository.provider';
   ],
   controllers: [UserController],
   providers: [UserMapping, UserProfile, RoleMapping, RoleProfile, UserService, UserRepositoryProvider, RoleRepositoryProvider],
-  exports: [UserService, MongooseModule],
+  exports: [UserMapping, UserService, MongooseModule],
 })
 export class UsersModule {}

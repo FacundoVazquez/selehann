@@ -14,7 +14,9 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    const role = await this.roleRepository.findOne({ role: createUserDto.role });
+    console.log('*******************', createUserDto);
+    //const role = await this.roleRepository.findOne({ id: createUserDto.role });
+    const role = createUserDto.role;
     const partialUser = this.userMapping.getUserFromCreateUser(createUserDto, role);
     const user = await this.userRepository.create(partialUser);
     const userDto = this.userMapping.getUserDto(user);

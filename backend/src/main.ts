@@ -1,3 +1,4 @@
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as helmet from 'helmet';
 import { config, database, up } from 'migrate-mongo';
@@ -11,6 +12,11 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, options);
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'api/v',
+  });
 
   const logger = app.get<Logger>(Logger);
   app.useLogger(logger);

@@ -4,6 +4,7 @@ import { LogLevel, LogType } from '../logger/types';
 export interface ObjectConfiguration {
   port: number;
   databases: {
+    logger: boolean;
     mongo: MongoDB[];
   };
   logger: {

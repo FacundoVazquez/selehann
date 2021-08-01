@@ -19,7 +19,7 @@ export const LoggerModule = LoggerPinoModule.forRoot({
     customErrorMessage: () => 'Response',
     serializers: {
       req(req: any) {
-        req.body = hideSensibilityData(req.raw.body, ['password']);
+        req.body = hideSensibilityData(req.raw.body, ['password', 'repeatedPassword']);
         return req;
       },
     },

@@ -6,13 +6,13 @@ import { normalizeQuery } from 'src/app/config/database/mongo/mongo.utils';
 import { IRole } from 'src/features/users/domain/entity/role.entity';
 import { Role as RoleEnum } from 'src/features/_shared/domain/roles/role.enum';
 
-@Schema({ versionKey: false, timestamps: { createdAt: true, updatedAt: true } })
+@Schema({ versionKey: false, timestamps: { createdAt: true, updatedAt: true }, _id: false })
 export class RoleDocument extends BaseDocument implements IRole {
   @Prop({ required: true })
   active: boolean;
 
   @Prop({ required: true, type: String })
-  role: RoleEnum;
+  id: RoleEnum;
 }
 
 const roleSchema = SchemaFactory.createForClass(RoleDocument);
