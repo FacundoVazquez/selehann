@@ -34,7 +34,7 @@ export class RoleRepository implements IRoleRepository {
   }
 
   async update(id: Id, entity: Partial<Role>): Promise<Role> {
-    const result = (await this.roleModel.findOneAndUpdate({ id: id as RoleEnum }, entity, { returnOriginal: false }))?.toJSON();
+    const result = (await this.roleModel.findOneAndUpdate({ id: id as RoleEnum }, { ...entity }, { returnOriginal: false, omitUndefined: true }))?.toJSON();
     const role = this.roleMapping.getRole(result);
     return role;
   }

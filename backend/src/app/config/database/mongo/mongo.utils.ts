@@ -15,6 +15,7 @@ export function buildMongoConnectionUri(partialUri: string, parts: MongoUriRequi
 
 export async function normalizeQuery() {
   const { id, ...rest } = this.getQuery() || {};
+  // console.log('getQuery', this.getQuery());
   const filter = removeUndefinedProperties({ _id: id, ...rest });
   this.setQuery(filter);
 }

@@ -5,7 +5,6 @@ import { configuration } from 'src/app/config/configuration/configuration';
 import { UsersModule } from 'src/features/users/infrastructure/di/user.module';
 import { UserRepositoryProvider } from 'src/features/users/infrastructure/repository/user.repository.provider';
 import { AuthService } from '../../application/service/auth.service';
-import { ACCESS_TOKEN_DURATION } from '../../domain/auth.constants';
 import { AuthController } from '../adapters/controller/auth.controller';
 import { AuthRepositoryProvider } from '../repository/auth.repository.provider';
 
@@ -15,7 +14,7 @@ import { AuthRepositoryProvider } from '../repository/auth.repository.provider';
     PassportModule,
     JwtModule.register({
       secret: configuration.jwt.secret,
-      signOptions: { expiresIn: ACCESS_TOKEN_DURATION },
+      signOptions: { expiresIn: configuration.jwt.accessToken.duration },
     }),
   ],
   controllers: [AuthController],

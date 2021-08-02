@@ -1,0 +1,14 @@
+[
+  {
+    "id": "lnc1",
+    "software": "jira"
+  },
+  {
+    "id": "lnc2",
+    "software": "slack"
+  },
+  {
+    "id": "lnc3",
+    "software": "webmail"
+  }
+]

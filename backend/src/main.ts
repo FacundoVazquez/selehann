@@ -50,7 +50,7 @@ async function runMigrations() {
         useNewUrlParser: configuration.databases.mongo[0].options.useNewUrlParser,
       },
     },
-    changelogCollectionName: 'migrations',
+    changelogCollectionName: '_migrations',
     migrationsDir: 'src/app/config/database/mongo/migrations',
   });
 

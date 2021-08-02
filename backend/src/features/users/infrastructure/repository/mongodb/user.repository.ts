@@ -30,11 +30,7 @@ import { UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    @InjectModel(Role.name) private readonly roleModel: Model<RoleDocument>,
-    private readonly userMapping: UserMapping,
-  ) {}
+  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private readonly userMapping: UserMapping) {}
 
   async create(entity: Partial<User>): Promise<User> {
     const submittedUser = new this.userModel({ ...entity });
@@ -55,7 +51,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async update(id: Id, entity: Partial<User>): Promise<User> {
-    const result = (await this.userModel.findOneAndUpdate({ id }, entity, { returnOriginal: false }))?.toJSON();
+    const result = (await this.userModel.findOneAndUpdate({ id }, { ...entity }, { returnOriginal: false, omitUndefined: true }))?.toJSON();
     const user = this.userMapping.getUser(result);
     return user;
   }

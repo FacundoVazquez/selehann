@@ -1,21 +1,23 @@
 import { AutoMap } from '@automapper/classes';
-import { Optional } from '@nestjs/common';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsString, NotEquals, ValidateIf } from 'class-validator';
 import { Role } from 'src/features/_shared/domain/roles/role.enum';
 
 export class UpdateUserDto {
   @AutoMap()
-  @Optional()
   @IsString()
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
   readonly username?: string;
 
   @AutoMap()
-  @Optional()
   @IsString()
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
   readonly password?: string;
 
   @AutoMap()
-  @Optional()
   @IsEnum(Role)
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
   readonly role?: Role;
 }

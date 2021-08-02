@@ -14,8 +14,6 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    console.log('*******************', createUserDto);
-    //const role = await this.roleRepository.findOne({ id: createUserDto.role });
     const role = createUserDto.role;
     const partialUser = this.userMapping.getUserFromCreateUser(createUserDto, role);
     const user = await this.userRepository.create(partialUser);
@@ -24,14 +22,14 @@ export class UserService {
   }
 
   async findUser(findOneUserDto: FindOneUserDto) {
-    const filter = this.userMapping.getUserFindOneUser(findOneUserDto);
+    const filter = this.userMapping.getUserFromFindOneUser(findOneUserDto);
     const user = await this.userRepository.findOne(filter);
     const userDto = this.userMapping.getUserDto(user);
     return userDto;
   }
 
   async findUsers(findManyUserDto: FindManyUserDto) {
-    const filter = this.userMapping.getUserFindManyUser(findManyUserDto);
+    const filter = this.userMapping.getUserFromFindManyUser(findManyUserDto);
     const users = await this.userRepository.findMany(filter);
     const usersDto = users.map((u) => this.userMapping.getUserDto(u));
     return usersDto;
@@ -39,7 +37,7 @@ export class UserService {
 
   async updateUser(findOneUserDto: FindOneUserDto, updateUserDto: UpdateUserDto) {
     const id = findOneUserDto.id;
-    const user = this.userMapping.getUserUpdateUser(updateUserDto);
+    const user = this.userMapping.getUserFromUpdateUser(updateUserDto);
     const userDocument = await this.userRepository.update(id, user);
     return this.userMapping.getUserDto(userDocument);
   }
@@ -50,7 +48,7 @@ export class UserService {
   }
 
   async deleteUsers(deleteManyUserDto: DeleteManyUserDto) {
-    const user = this.userMapping.getUserDeleteManyUser(deleteManyUserDto);
+    const user = this.userMapping.getUserFromDeleteManyUser(deleteManyUserDto);
     return this.userRepository.deleteMany(user);
   }
 }

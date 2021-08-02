@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { configuration } from 'src/app/config/configuration/configuration';
 import { User } from 'src/features/users/domain/entity/user.entity';
 import { IUserRepository, Username } from 'src/features/users/domain/repository/user.repository';
 import { USER_REPOSITORY } from 'src/features/users/infrastructure/repository/user.repository.provider';
 import { Role } from 'src/features/_shared/domain/roles/role.enum';
-import { REFRESH_TOKEN_DURATION } from '../../domain/auth.constants';
 import { RefreshToken } from '../../domain/auth.types';
 import { IAuthRepository } from '../../domain/repository/auth.repository';
 import { AUTH_REPOSITORY } from '../../infrastructure/repository/auth.repository.provider';
@@ -87,7 +87,7 @@ export class AuthService {
     const { username, roleId: role } = user;
     const payload = { username, role };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: REFRESH_TOKEN_DURATION });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: configuration.jwt.refreshToken.duration });
 
     this.deleteAllRefreshTokensFromUser(username);
     this.refreshTokens[refreshToken] = user.username;

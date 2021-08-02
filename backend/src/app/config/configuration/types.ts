@@ -18,6 +18,8 @@ export interface ObjectConfiguration {
   };
   jwt: {
     secret: string;
+    accessToken: { duration: string };
+    refreshToken: { duration: string };
   };
   origin: string;
   [key: string]: any;

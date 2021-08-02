@@ -23,23 +23,23 @@ export class UserMapping {
     return this.mapper.map(dto, User, CreateUserDto, { extraArguments: { role } });
   }
 
-  getUserFindOneUser(dto: FindOneUserDto): Partial<User> {
+  getUserFromFindOneUser(dto: FindOneUserDto): Partial<User> {
     return this.mapper.map(dto, User, FindOneUserDto);
   }
 
-  getUserFindManyUser(dto: FindManyUserDto): Partial<User> {
+  getUserFromFindManyUser(dto: FindManyUserDto): Partial<User> {
     return this.mapper.map(dto, User, FindManyUserDto);
   }
 
-  getUserDeleteOneUser(dto: DeleteOneUserDto): Partial<User> {
+  getUserFromDeleteOneUser(dto: DeleteOneUserDto): Partial<User> {
     return this.mapper.map(dto, User, DeleteOneUserDto);
   }
 
-  getUserDeleteManyUser(dto: DeleteManyUserDto): Partial<User> {
+  getUserFromDeleteManyUser(dto: DeleteManyUserDto): Partial<User> {
     return this.mapper.map(dto, User, DeleteManyUserDto);
   }
 
-  getUserUpdateUser(dto: UpdateUserDto): Partial<User> {
+  getUserFromUpdateUser(dto: UpdateUserDto): Partial<User> {
     return this.mapper.map(dto, User, UpdateUserDto);
   }
 }

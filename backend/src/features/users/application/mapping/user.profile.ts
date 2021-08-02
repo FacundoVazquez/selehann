@@ -19,13 +19,6 @@ export class UserProfile extends AutomapperProfile {
         (d) => d.role,
         mapFrom((s) => s.roleId),
       );
-      /* 
-        .beforeMap((s, d) => {
-          console.log('Mapped Init', s, d);
-        })
-        .afterMap((s, d) => {
-          console.log('Mapped OK', s, d);
-        }); */
 
       mapper
         .createMap(CreateUserDto, User)

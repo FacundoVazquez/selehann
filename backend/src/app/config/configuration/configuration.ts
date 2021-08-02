@@ -80,6 +80,24 @@ export const configuration: ObjectConfiguration = {
 
       throw new ConfigurationException(`Invalid jwt secret: ${value}`);
     })() as string,
+    accessToken: {
+      duration: (() => {
+        const value = process.env.JWT_ACCESS_TOKEN_DURATION;
+
+        if (value?.length > 0) return value;
+
+        throw new ConfigurationException(`Invalid jwt access token duration: ${value}`);
+      })() as string,
+    },
+    refreshToken: {
+      duration: (() => {
+        const value = process.env.JWT_REFRESH_TOKEN_DURATION;
+
+        if (value?.length > 0) return value;
+
+        throw new ConfigurationException(`Invalid jwt refresh token duration: ${value}`);
+      })() as string,
+    },
   },
   origin: process.env.ORIGIN,
 };

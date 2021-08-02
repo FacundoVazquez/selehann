@@ -1,16 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString, NotEquals, ValidateIf } from 'class-validator';
+import { IsArray, IsBoolean, IsString, NotEquals, ValidateIf } from 'class-validator';
 
-export class FindOneUserDto {
-  @AutoMap()
-  @IsMongoId()
-  @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
-  readonly id?: string;
-
+export class UpdateDeveloperDto {
   @AutoMap()
   @IsString()
   @NotEquals(null)
   @ValidateIf((object, value) => value !== undefined)
-  readonly username?: string;
+  readonly fullname?: string;
+
+  @AutoMap()
+  @IsBoolean()
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
+  readonly active?: boolean;
 }
