@@ -1,4 +1,4 @@
-import { MongooseModule } from '@nestjs/mongoose';
-import { options } from './database.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { mySqlDbConnection } from './database.config';
 
-export const DatabaseModule = MongooseModule.forRoot(options.uri, options);
+export const MySqlDatabaseModule = TypeOrmModule.forRoot(mySqlDbConnection);

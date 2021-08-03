@@ -1,9 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { IsMongoId, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class FindOneDeveloperDto {
   @AutoMap()
   @IsNotEmpty()
-  @IsMongoId()
+  //@IsUUID()
   readonly id: string;
 }

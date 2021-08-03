@@ -6,18 +6,18 @@ export class UpdateUserDto {
   @AutoMap()
   @IsString()
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
+  @ValidateIf((_, value) => value !== undefined)
   readonly username?: string;
 
   @AutoMap()
   @IsString()
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
+  @ValidateIf((_, value) => value !== undefined)
   readonly password?: string;
 
   @AutoMap()
-  @IsEnum(Role)
+  //@IsEnum(Role)
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
-  readonly role?: Role;
+  @ValidateIf((_, value) => value !== undefined)
+  readonly roleId?: string;
 }

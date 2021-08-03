@@ -1,7 +1,7 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
-import { Role } from '../../domain/entity/role.entity';
+import { Role } from '../../domain/entities/role.entity';
 import { RoleDto } from '../dto/role.dto';
 
 @Injectable()

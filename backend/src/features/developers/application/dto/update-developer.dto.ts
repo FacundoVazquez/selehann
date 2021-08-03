@@ -5,12 +5,12 @@ export class UpdateDeveloperDto {
   @AutoMap()
   @IsString()
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
+  @ValidateIf((_, value) => value !== undefined)
   readonly fullname?: string;
 
   @AutoMap()
   @IsBoolean()
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
+  @ValidateIf((_, value) => value !== undefined)
   readonly active?: boolean;
 }

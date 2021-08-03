@@ -1,5 +1,4 @@
-import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { TypeOrmModuleOptions as TypeOrmModuleOptionsNest } from '@nestjs/typeorm';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-export interface MongoDB {
-  options: MongooseModuleOptions;
-}
+export type TypeOrmModuleOptions = TypeOrmModuleOptionsNest & Partial<MysqlConnectionOptions>;

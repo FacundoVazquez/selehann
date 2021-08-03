@@ -1,7 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Optional } from '@nestjs/common';
-import { IsString, IsEnum, IsNotEmpty } from 'class-validator';
-import { Role } from 'src/features/_shared/domain/roles/role.enum';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @AutoMap()
@@ -16,6 +14,6 @@ export class CreateUserDto {
 
   @AutoMap()
   @IsNotEmpty()
-  @IsEnum(Role)
-  readonly role: Role;
+  @IsString()
+  readonly roleId: string;
 }

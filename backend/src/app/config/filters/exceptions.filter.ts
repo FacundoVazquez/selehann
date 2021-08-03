@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, LoggerService } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Error } from 'mongoose';
 import { JsonResponse } from './types';
+import { TypeORMError } from 'typeorm';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
@@ -17,9 +17,9 @@ export class ExceptionsFilter implements ExceptionFilter {
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
-    } else if (exception instanceof Error.ValidationError) {
+    } else if (exception instanceof TypeORMError) {
       status = HttpStatus.UNPROCESSABLE_ENTITY;
-      message = 'Data validation has failed!';
+      message = 'Error proccessing data!';
     }
 
     const shouldLog = status >= 400;

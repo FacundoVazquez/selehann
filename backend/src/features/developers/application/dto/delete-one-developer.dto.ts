@@ -4,6 +4,5 @@ import { IsMongoId, IsNotEmpty } from 'class-validator';
 export class DeleteOneDeveloperDto {
   @AutoMap()
   @IsNotEmpty()
-  @IsMongoId()
   readonly id: string;
 }

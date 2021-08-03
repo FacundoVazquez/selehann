@@ -1,11 +1,13 @@
-import { MongoDB } from '../database/types';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { TypeOrmModuleOptions } from '../database/types';
 import { LogLevel, LogType } from '../logger/types';
 
 export interface ObjectConfiguration {
   port: number;
   databases: {
     logger: boolean;
-    mongo: MongoDB[];
+    mongo?: MongooseModuleOptions[];
+    mysql?: TypeOrmModuleOptions[];
   };
   logger: {
     type: LogType;

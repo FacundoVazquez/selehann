@@ -1,5 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { Role } from '../../../_shared/domain/roles/role.enum';
 
 export class UserDto {
   @AutoMap()
@@ -7,5 +6,5 @@ export class UserDto {
   @AutoMap()
   readonly username: string;
   @AutoMap()
-  readonly role: Role;
+  readonly roleId: string;
 }

@@ -2,25 +2,24 @@ import { InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { Role } from 'src/features/_shared/domain/roles/role.enum';
-import { IDeveloper, Developer } from '../../domain/entity/developer.entity';
+import { Developer } from '../../domain/entities/developer.entity';
 import {
   CreateDeveloperDto,
   DeleteManyDeveloperDto,
   DeleteOneDeveloperDto,
+  DeveloperDto,
   FindManyDeveloperDto,
   FindOneDeveloperDto,
   UpdateDeveloperDto,
-  DeveloperDto,
 } from '../dto';
 
 @Injectable()
 export class DeveloperMapping {
   constructor(@InjectMapper() private readonly mapper: Mapper) {}
 
-  getDeveloper(developer: IDeveloper): Developer {
+  getDeveloper(developer: Developer): Developer {
     const c = plainToClass(Developer, developer);
-    console.log('Class:', c);
+
     return plainToClass(Developer, developer);
   }
 

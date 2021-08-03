@@ -1,9 +1,10 @@
-import { LogType, LogLevel } from '../logger/types';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { config } from 'dotenv';
+import { TypeOrmModuleOptions } from '../database/types';
+import { LogLevel, LogType } from '../logger/types';
 import { parseBoolean } from '../utils/types.utils';
 import { ConfigurationException } from './configuration.exception';
 import { ObjectConfiguration } from './types';
-import { config } from 'dotenv';
-import { buildMongoConnectionUri } from '../database/mongo/mongo.utils';
 
 config();
 
@@ -19,22 +20,15 @@ export const configuration: ObjectConfiguration = {
         throw new ConfigurationException(`Invalid database logger status: ${value}`);
       }
     })(),
-    mongo: (() => {
-      const values = { scheme: process.env.DATABASE_SCHEME, username: process.env.DATABASE_USERNAME, password: process.env.DATABASE_PASSWORD };
-      const uri = buildMongoConnectionUri(process.env.DATABASE_URI, values);
-
-      return [
-        {
-          options: {
-            uri,
-            dbName: process.env.DATABASE_NAME,
-            useNewUrlParser: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
-          },
-        },
-      ];
-    })(),
+    mysql: [
+      {
+        host: process.env.DATABASE_HOST,
+        port: Number(process.env.DATABASE_PORT),
+        database: process.env.DATABASE_NAME,
+        username: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+      },
+    ],
   },
   logger: {
     type: (() => {

@@ -6,6 +6,6 @@ export class DeleteManyUserDto {
   @AutoMap()
   @IsEnum(Role)
   @NotEquals(null)
-  @ValidateIf((object, value) => value !== undefined)
+  @ValidateIf((_, value) => value !== undefined)
   readonly role?: Role;
 }
