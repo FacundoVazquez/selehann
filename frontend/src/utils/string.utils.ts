@@ -30,6 +30,11 @@ export function randomString() {
 export function compare(a: number | string | null, b: number | string | null) {
   if (a! && b! && typeof a !== typeof b) throw new Error('Invalid comparation types');
 
+  if (typeof a === 'number' && +a! !== NaN && typeof b === 'number' && +b! !== NaN) {
+    a = +a!;
+    b = +b!;
+  }
+
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   a = a ? a : '';
   b = b ? b : '';

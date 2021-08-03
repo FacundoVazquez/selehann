@@ -1,6 +1,6 @@
 import { matchPath, useLocation } from 'react-router-dom';
 import { history } from 'src/app/store';
-import { getHomePage, views } from 'src/views';
+import { getHomePage, getAuthPage, views } from 'src/views';
 import { View } from 'src/views/types';
 
 /**
@@ -13,8 +13,15 @@ export const getRoute = () => {
 /**
  * Go to home page.
  */
-export function goHome() {
+export function goToHomePage() {
   history.push(getHomePage());
+}
+
+/**
+ * Go to home page.
+ */
+export function goToAuthPage() {
+  history.push(getAuthPage());
 }
 
 /**

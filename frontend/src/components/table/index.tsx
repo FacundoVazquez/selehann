@@ -6,7 +6,7 @@ import TableAnt, { ColumnType, TableProps } from 'antd/lib/table';
 import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfig, TableRowSelection } from 'antd/lib/table/interface';
 import classNames from 'classnames';
 import _ from 'lodash';
-import React, { CSSProperties, ReactNode, useEffect, useState } from 'react';
+import React, { CSSProperties, Key, ReactNode, useEffect, useState } from 'react';
 import { SHADOW, UNSELECTABLE } from '../../constants';
 import { Texts } from '../../constants/texts';
 import { IElement } from '../../types';
@@ -49,6 +49,7 @@ export interface ColumnTypeEx<RecordType> extends ColumnType<RecordType> {
 
 // Table properties
 export interface TablePropsEx<RecordType> extends TableProps<RecordType> {
+  rowKey: string;
   sortable?: boolean;
   hideRowSelection?: boolean;
   hidePagination?: boolean;
@@ -70,14 +71,18 @@ interface TableState<RecordType> {
   sort: SorterResult<RecordType>[];
 }
 
+const PAGINATION_DEFAULT_PAGE_SIZE = 15;
+
 export const Table = <RecordType extends IElement = any>(props: TablePropsEx<RecordType>) => {
   const [form] = Form.useForm();
+
+  const rowKey = props.rowKey;
 
   const [state, setState] = useState<TableState<RecordType>>({
     action: { current: 'idle' },
     currentPage: 1,
     editingRow: {},
-    pageSize: (props.pagination && props.pagination.pageSize) || 10,
+    pageSize: (props.pagination && props.pagination.pageSize) || PAGINATION_DEFAULT_PAGE_SIZE,
     selectedRows: [],
     sort: [],
   });
@@ -87,12 +92,12 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
   const keyColumn = React.useMemo(
     () =>
       ({
-        key: 'key',
-        dataIndex: 'key',
+        key: `_${rowKey}`,
+        dataIndex: rowKey,
         title: '#',
         width: 60,
         sorter: {
-          compare: (a, b) => compare(+a.key, +b.key),
+          compare: (a, b) => compare(a[rowKey], b[rowKey]),
           multiple: -1,
         },
       } as ColumnTypeEx<RecordType>),
@@ -163,14 +168,14 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
         shouldCellUpdate: (record, prevRecord) => {
           if (!record) return;
           // Ignore fill cell
-          const rowKey = props.rowKey;
+          //const rowKey = props.rowKey;
           if (typeof rowKey === 'string' && record[rowKey] === undefined) return false;
           //if (record.key === undefined) return false;
 
           // Update cell when a record was deleted.
           if (state.action.previous === 'deleting') return true;
 
-          const isEditing = record.key === state.editingRow.current || record.key === state.editingRow.previous;
+          const isEditing = record[rowKey] === state.editingRow.current || record[rowKey] === state.editingRow.previous;
 
           const isActionColumn = col.dataIndex === 'actions';
           const shouldUpdateAction =
@@ -202,11 +207,13 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
 
           // Change focus to next empty field on select element has been selected.
           const value = inputType === 'select' && options && options.length === 1 ? options[0].value : record[dataIndex] ?? form.getFieldValue(dataIndex);
+
           const shouldFocusInput = !isInputFocused && !!editable && isEditing(record) && (value === '' || value === undefined);
 
           if (shouldFocusInput) isInputFocused = true;
 
           return {
+            rowKey,
             key: dataIndex,
             dataIndex,
             value,
@@ -224,15 +231,16 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
         render: col.render
           ? col.render
           : (value, record, index) => {
-              if (col.key === 'key') return dataSource.indexOf(record) + 1;
-              else if (col.key === 'actions') return renderActionsColumn(record);
+              if (col.key === `_${[rowKey]}`) {
+                return dataSource.indexOf(record) + 1;
+              } else if (col.key === 'actions') return renderActionsColumn(record);
               else return value;
             },
       } as ColumnTypeEx<RecordType>;
     });
 
     return columns;
-  }, [state, props.columns]);
+  }, [state, props.columns, props.dataSource]);
 
   useEffect(() => {
     onActionChange && onActionChange(state.action.current, [...dataSource], state.editingRow.current);
@@ -616,7 +624,7 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
                   position: ['bottomRight'],
                   current: state.currentPage,
                   pageSize: state.pageSize,
-                  pageSizeOptions: ['10', '20', '30', '50'],
+                  pageSizeOptions: [`${PAGINATION_DEFAULT_PAGE_SIZE}`, '30', '50', '100'],
                   showSizeChanger: true,
                   onChange: (page, pageSize) => {
                     setState((prev) => ({

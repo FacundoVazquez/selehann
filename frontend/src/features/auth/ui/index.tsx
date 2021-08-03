@@ -11,6 +11,7 @@ import { Texts } from 'src/constants/texts';
 import { getRule } from 'src/features/_shared/ui/utils';
 import { Message } from 'src/helpers/message.helper';
 import { Rules } from 'src/types';
+import { goToHomePage } from 'src/utils/history.utils';
 import { LoginDto, RegisterDto } from '../data/dto';
 import { login, register } from '../logic';
 import styles from './style.module.less';
@@ -150,7 +151,7 @@ export const Login: React.FC = (props) => {
     const result = await dispatch(login({ body }));
 
     if (login.fulfilled.match(result)) {
-      history.push('home');
+      goToHomePage();
       Message.success(Texts.LOGIN_SUCCESS);
     } else if (result.payload?.status! > 500) Message.error(Texts.SERVER_UNAVAILABLE);
     else Message.error(Texts.LOGIN_FAILED);
@@ -160,7 +161,7 @@ export const Login: React.FC = (props) => {
     const result = await dispatch(register({ body }));
 
     if (register.fulfilled.match(result)) {
-      history.push('home');
+      goToHomePage();
       Message.success(Texts.LOGIN_SUCCESS);
     } else if (result.payload?.status! > 500) Message.error(Texts.SERVER_UNAVAILABLE);
     else Message.error(Texts.REGISTER_FAILED);

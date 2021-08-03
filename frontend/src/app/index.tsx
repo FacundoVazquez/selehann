@@ -1,4 +1,4 @@
-import { ContainerOutlined, HomeOutlined } from '@ant-design/icons';
+import { ContainerOutlined, TeamOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ import { MenuItem, MenuParentItem } from 'src/features/navigator-menu/ui/types';
 import { Message } from 'src/helpers/message.helper';
 import { hasError, isFetchingData } from 'src/helpers/validation.helper';
 import { tokenIsExpiredOrNull } from 'src/utils/auth.utils';
+import { goToAuthPage } from 'src/utils/history.utils';
 import { views } from 'src/views';
 import { BackToTop } from '../components/back-to-top';
 import { RootState } from './store';
@@ -28,7 +29,7 @@ import styles from './style.module.less';
  * App
  */
 
-export const menuItems: MenuItem[] = [{ view: views['Home'], icon: <HomeOutlined /> }].map((item: MenuItem) => {
+export const menuItems: MenuItem[] = [{ view: views['Developers'], icon: <TeamOutlined /> }].map((item: MenuItem) => {
   const parent: MenuParentItem | null = !!(item as MenuParentItem).children ? (item as MenuParentItem) : null;
   if (!parent) return item;
   return {
@@ -72,13 +73,13 @@ export const App = () => {
 
         if (getAccessToken.rejected.match(result)) {
           if (accessToken || refreshToken) dispatch(logout());
-          history.push('auth');
+          goToAuthPage();
           Message.info(Texts.SESSION_EXPIRED);
         }
       } else if (accessTokenExpiredOrNull && refreshTokenExpiredOrNull && !router.location.pathname.startsWith('/auth')) {
         setAuthenticated(false);
         // Message.info('Session expired!');
-        history.push('auth');
+        goToAuthPage();
       }
     };
 
@@ -122,7 +123,7 @@ export const App = () => {
         <Layout className={styles.main}>
           {authenticated && <NavigatorMenu items={menuItems} />}
           <ContentWrapper className={styles.content} authenticated={authenticated}>
-            {isFetchingData(shared) ? <LoadingContent /> : hasError(shared) ? <ServiceError /> : <Router views={views} />}
+            {isFetchingData(shared) ? <LoadingContent /> : hasError(shared) ? <ServiceError /> : <Router views={views} authenticated={authenticated} />}
           </ContentWrapper>
         </Layout>
       </Layout>

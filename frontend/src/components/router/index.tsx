@@ -6,6 +6,7 @@ import { View } from 'src/views/types';
 
 type RouterProps = {
   views: Views;
+  authenticated: boolean;
 };
 
 export const Router: React.FC<RouterProps> = React.memo((props) => {
@@ -33,8 +34,8 @@ export const Router: React.FC<RouterProps> = React.memo((props) => {
     return (
       views
         // .filter((view) => !view.scope)
-        .map((view) => (
-          <Route key={view.title} exact path={view.path}>
+        .map((view, index) => (
+          <Route key={`${index}_${view.title}`} exact path={view.path}>
             {view.component}
           </Route>
         ))
@@ -45,10 +46,16 @@ export const Router: React.FC<RouterProps> = React.memo((props) => {
     return <Redirect from="/" to={homePage} exact />;
   };
 
+  const redirectHomeIfUserAuthenticated = () => {
+    console.log(props.authenticated);
+    if (props.authenticated) return <Redirect from="/auth" to={homePage} />;
+  };
+
   return (
     <Switch>
       {removeTrailingSlashes()}
       {redirectHome()}
+      {redirectHomeIfUserAuthenticated()}
       {setRoutes(views)}
     </Switch>
   );

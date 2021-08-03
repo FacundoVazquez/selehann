@@ -30,9 +30,10 @@ export interface HttpRequest<RequestBody = DataDictionary | void> {
   retries?: number;
 }
 
-export interface HttpResponse<ResponseBody = DataDictionary | void> {
+export interface HttpResponse<ResponseBody = DataDictionary | void, ResponseBodyMapped = any | void> {
   status: number;
   data?: Data<ResponseBody>;
+  mappedData?: Data<ResponseBodyMapped>;
 }
 
 // export type RequestOptions<T = void> = Request<T> | undefined;

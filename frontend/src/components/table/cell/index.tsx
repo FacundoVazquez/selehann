@@ -16,6 +16,7 @@ import styles from './style.module.less';
 const { Option } = Select;
 
 export interface CellProps extends BasicComponentProps<HTMLTableDataCellElement> {
+  rowKey: string;
   dataIndex: string;
   value: string | number | boolean | Moment;
   editing: boolean;
@@ -28,7 +29,7 @@ export interface CellProps extends BasicComponentProps<HTMLTableDataCellElement>
 }
 
 export const Cell = React.memo((props: CellProps) => {
-  const { dataIndex, value, title, editing, inputType, options, hasFocus, hasFeedback, rules, children, onSelectChange, ...restProps } = props;
+  const { rowKey, dataIndex, value, title, editing, inputType, options, hasFocus, hasFeedback, rules, children, onSelectChange, ...restProps } = props;
 
   const cellRef = useRef<HTMLTableDataCellElement>(null);
 
@@ -120,7 +121,17 @@ export const Cell = React.memo((props: CellProps) => {
   };
 
   const renderField = (inputType?: InputType) => {
-    if (dataIndex && dataIndex !== 'key' && dataIndex !== 'actions' && !value && value !== 0 && !editing && inputType !== 'button') return <MinusOutlined />;
+    if (
+      dataIndex &&
+      dataIndex !== `_${rowKey}` &&
+      dataIndex !== 'actions' &&
+      inputType !== 'button' &&
+      !editing &&
+      value === null &&
+      value === undefined &&
+      value !== 0
+    )
+      return <MinusOutlined />;
 
     switch (inputType) {
       case 'select':

@@ -6,4 +6,5 @@ export interface View {
   component: JSX.Element;
   scope?: Scope;
   homePage?: boolean;
+  authPage?: boolean;
 }

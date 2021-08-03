@@ -8,7 +8,7 @@ export interface RegisterDto extends LoginDto {
   role: string;
 }
 
-export interface GetAccessTokenDto {
+export interface FetchAccessTokenDto {
   refreshToken: string;
 }
 

@@ -30,7 +30,9 @@ export function buildBaseURL(apiId: string, extra?: { domainPrefix?: string; dom
 export function buildEndpoint(baseURL: string, path: string, placeholders?: Placeholders) {
   const _placeholders = placeholders ? Object.entries(placeholders) : undefined;
   let _path = path;
+
   if (_placeholders) _path = _placeholders.reduce((url, ph) => url.replace(`:${ph[0]}`, ph[1].toString()), _path);
+
   return `${baseURL}/${_path}`.toLowerCase();
 }
 

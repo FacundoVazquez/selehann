@@ -1,7 +1,7 @@
 import { Button, Result } from 'antd';
 import React from 'react';
 import { Wrapper } from 'src/components/wrapper';
-import { goHome } from 'src/utils/history.utils';
+import { goToHomePage } from 'src/utils/history.utils';
 
 export const NotFound: React.FC = (props) => {
   return (
@@ -11,7 +11,7 @@ export const NotFound: React.FC = (props) => {
         title="404"
         subTitle="El contenido no existe."
         extra={
-          <Button type="primary" onClick={goHome}>
+          <Button type="primary" onClick={goToHomePage}>
             Ir al Inicio
           </Button>
         }

@@ -126,7 +126,7 @@ export const NavigatorMenu: React.FC<MenuProps> = React.memo((props) => {
         onSelect={({ key, keyPath, selectedKeys, domEvent }) => {
           if (menu.collapsed) dispatch(setOpenMenu(''));
         }}
-        theme={props.theme ?? 'light'}
+        theme={props.theme ?? 'dark'}
         mode={props.mode ?? 'inline'}>
         {renderMenu(props.items)}
       </Menu>

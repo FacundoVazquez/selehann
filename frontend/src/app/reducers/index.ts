@@ -1,18 +1,21 @@
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
 import { combineReducers } from '@reduxjs/toolkit';
-import authReducer from 'src/features/auth/logic';
-
-import mensaje from 'src/app/reducers/mensaje.reducer';
-import configuracionReducer from 'src/features/configuracion/configuracion.slice';
+import settingsReducer from 'src/features/settings/logic';
 import menuReducer from 'src/features/navigator-menu/logic';
+import authReducer from 'src/features/auth/logic';
+import developersReducer from 'src/features/developers/logic';
+import assetsReducer from 'src/features/resources/assets/logic';
+import licensesReducer from 'src/features/resources/licenses/logic';
 import sharedReducer from 'src/features/_shared/logic';
 
 const reducers = {
-  auth: authReducer,
-  mensaje,
-  configuracion: configuracionReducer,
+  settings: settingsReducer,
   menu: menuReducer,
+  auth: authReducer,
+  developers: developersReducer,
+  assets: assetsReducer,
+  licenses: licensesReducer,
   shared: sharedReducer,
 };
 

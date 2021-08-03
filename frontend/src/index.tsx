@@ -9,6 +9,7 @@ import { ConfigProvider } from 'antd';
 import { ConnectedRouter } from 'connected-react-router';
 import { App } from 'src/app';
 import { history, persistor, store } from 'src/app/store';
+import en from 'antd/lib/locale-provider/en_US';
 import es from 'antd/lib/locale-provider/es_ES';
 import 'moment/locale/es';
 import 'src/styles/global.less'; // last
@@ -16,7 +17,7 @@ import 'src/styles/global.less'; // last
 ReactDOM.render(
   <ReduxProvider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <ConfigProvider locale={es}>
+      <ConfigProvider locale={en}>
         <ConnectedRouter history={history}>
           <App />
         </ConnectedRouter>

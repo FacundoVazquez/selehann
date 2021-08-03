@@ -9,9 +9,5 @@ interface RecordsCounterProps {
 
 export const RecordsCounter = React.memo((props: RecordsCounterProps) => {
   const { count } = props;
-  return (
-    <Tag className={styles.tag} color="volcano">
-      {Texts.REGISTRIES + ' ' + count}
-    </Tag>
-  );
+  return <Tag className={styles.tag}>{Texts.REGISTRIES + ' ' + count}</Tag>;
 });

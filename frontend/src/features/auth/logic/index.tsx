@@ -7,7 +7,7 @@ import { rejectRequest } from 'src/api/utils/axios.utils';
 import { createHttpAsyncThunk, RootState } from 'src/app/store';
 import { getPayloadProperty } from 'src/utils/auth.utils';
 import { sleep } from 'src/utils/common.utils';
-import { GetAccessTokenDto, LoginDto, RegisterDto, SessionDto } from '../data/dto';
+import { FetchAccessTokenDto, LoginDto, RegisterDto, SessionDto } from '../data/dto';
 import { AuthState } from '../data/types';
 
 const FEATURE_NAME = 'auth';
@@ -72,7 +72,7 @@ export const register = createHttpAsyncThunk<RegisterDto, SessionDto, { state: R
   },
 );
 
-export const getAccessToken = createHttpAsyncThunk<GetAccessTokenDto, Pick<SessionDto, 'accessToken'>, { state: RootState; rejectValue: HttpResponse }>(
+export const getAccessToken = createHttpAsyncThunk<FetchAccessTokenDto, Pick<SessionDto, 'accessToken'>, { state: RootState; rejectValue: HttpResponse }>(
   FEATURE_NAME + '/getAccessToken',
   async (options, thunkApi) => {
     const { dispatch, getState } = thunkApi;

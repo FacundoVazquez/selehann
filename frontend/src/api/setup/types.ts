@@ -17,5 +17,12 @@ export interface ResourcesGateway {
   AUTH_TOKEN: Resource;
   USERS_GET_ONE: Resource;
   USERS_GET_MANY: Resource;
-  DEVELOPERS_GET_ONE: Resource;
+  DEVELOPERS_GET_MANY: Resource;
+  DEVELOPERS_SET_STATUS: Resource;
+  DEVELOPERS_SET_ASSETS: Resource;
+  DEVELOPERS_SET_LICENSES: Resource;
+  ASSETS_GET_MANY: Resource;
+  ASSETS_GET_MANY_BY_DEVELOPER: Resource;
+  LICENSES_GET_MANY: Resource;
+  LICENSES_GET_MANY_BY_DEVELOPER: Resource;
 }

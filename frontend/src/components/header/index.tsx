@@ -2,24 +2,23 @@ import { CompassFilled, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design
 import { Button, Layout } from 'antd';
 import { LayoutProps } from 'antd/lib/layout';
 import classNames from 'classnames';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { RootState } from 'src/app/store';
+import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/store/store.hooks';
 import { APP_TITLE, SHADOW, STICKY, UNSELECTABLE } from 'src/constants';
 import { Texts } from 'src/constants/texts';
-import { setOrientation } from 'src/features/configuracion/configuracion.slice';
-import { setOpenMenu, toggleButtonVisible, toggleCollapse, toggleForcedCollapse } from 'src/features/navigator-menu/logic';
-import { useWindowSize } from 'src/hooks/window-size.hook';
-import { goHome } from 'src/utils/history.utils';
-import { getScreenOrientation } from 'src/utils/screen.utils';
-import { FlickerImage } from '../flicker-image';
 import { logout } from 'src/features/auth/logic';
-import styles from './style.module.less';
-import exit from 'src/_assets/exit.svg';
-import exitHover from 'src/_assets/exit-hover.svg';
-import _ from 'lodash';
+import { setOpenMenu, toggleButtonVisible, toggleCollapse, toggleForcedCollapse } from 'src/features/navigator-menu/logic';
+import { setOrientation } from 'src/features/settings/logic';
 import { Message } from 'src/helpers/message.helper';
-import { useHistory } from 'react-router-dom';
+import { useWindowSize } from 'src/hooks/window-size.hook';
+import { goToAuthPage, goToHomePage } from 'src/utils/history.utils';
+import { getScreenOrientation } from 'src/utils/screen.utils';
+import exitHover from 'src/_assets/exit-hover.svg';
+import exit from 'src/_assets/exit.svg';
+import { FlickerImage } from '../flicker-image';
+import styles from './style.module.less';
 
 const { Header: HeaderAnt } = Layout;
 
@@ -31,7 +30,7 @@ const WIDTH = 800;
 
 export const Header: React.FC<HeaderProps> = (props) => {
   const username = useAppSelector((s) => s.auth.data.session?.username!);
-  const settings = useAppSelector((s) => s.configuracion);
+  const settings = useAppSelector((s) => s.settings);
   const menu = useAppSelector((s) => s.menu);
   const dispatch = useAppDispatch();
   const size = useWindowSize();
@@ -43,12 +42,11 @@ export const Header: React.FC<HeaderProps> = (props) => {
 
   /* Icon rotation effect */
   useEffect(() => {
-    setTimeout(
-      () => {
-        setRotate(!rotate);
-      },
-      rotate ? 2500 : 5000,
-    );
+    const rotateIcon = setTimeout(() => setRotate(!rotate), rotate ? 2500 : 5000);
+
+    return () => {
+      clearTimeout(rotateIcon);
+    };
   }, [rotate]);
 
   useEffect(() => {
@@ -95,7 +93,7 @@ export const Header: React.FC<HeaderProps> = (props) => {
     return (
       <div className={styles.logoWrapper}>
         <div className={styles.logo}>
-          <Button type="link" size="large" style={{ display: 'flex' }} onClick={goHome}>
+          <Button type="link" size="large" style={{ display: 'flex' }} onClick={goToHomePage}>
             <CompassFilled style={{ fontSize: '26px', minWidth: '50px' }} spin={rotate} /> {APP_TITLE}
           </Button>
         </div>
@@ -130,7 +128,7 @@ export const Header: React.FC<HeaderProps> = (props) => {
           alt="Salir"
           onClick={() => {
             dispatch(logout());
-            history.push('auth');
+            goToAuthPage();
             Message.info('Session finished!');
           }}
         />
