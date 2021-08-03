@@ -40,9 +40,9 @@ export const menuItems: MenuItem[] = [{ view: views['Developers'], icon: <TeamOu
 
 export const App = () => {
   const dispatch = useAppDispatch();
-  const router = useAppSelector((state: RootState) => state.router);
+  const router = useAppSelector((s) => s.router);
   const { accessToken, refreshToken } = useAppSelector((s) => s.auth.data.session) || {};
-  const shared = useAppSelector((state: RootState) => state.shared);
+  const shared = useAppSelector((s) => s.shared);
   const history = useHistory();
   const [authenticated, setAuthenticated] = useState(false);
 

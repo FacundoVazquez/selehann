@@ -22,7 +22,7 @@ export const cancelRequest = (source: CancelTokenSource) => {
   if (source) source.cancel();
 };
 
-export const rejectRequest = (err: AxiosError, thunkApi: any) => {
+export const rejectRequest = (err: AxiosError | Error, thunkApi: any) => {
   const { data, status } = (err as AxiosError).response || {};
   const error: HttpResponse = { data, status: status ?? SERVER_UNAVAILABLE };
 

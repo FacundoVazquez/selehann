@@ -313,7 +313,7 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
   const handleAddRecord = () => {
     if (!onDataChange) return;
 
-    const key = dataSource.length + 1;
+    const key = `${dataSource.length + 1}`;
     const record: RecordType = { key } as RecordType;
     const sort: SorterResult<RecordType> = { columnKey: 'key', order: undefined };
 

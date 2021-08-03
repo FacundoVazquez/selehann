@@ -29,8 +29,8 @@ export const NavigatorMenu: React.FC<MenuProps> = React.memo((props) => {
   const siderClassNames = classNames(STICKY, UNSELECTABLE, SHADOW, props.className, styles.sider);
 
   const dispatch = useAppDispatch();
-  const menu = useAppSelector((state: RootState) => state.menu);
-  const router = useAppSelector((state: RootState) => state.router);
+  const menu = useAppSelector((s) => s.menu);
+  const router = useAppSelector((s) => s.router);
 
   useEffect(() => {
     const pathname = window.location.pathname;

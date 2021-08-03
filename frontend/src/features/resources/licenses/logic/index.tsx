@@ -5,6 +5,8 @@ import { HttpResponse } from 'src/api/types';
 import { buildAxiosRequestConfig } from 'src/api/utils/api.utils';
 import { rejectRequest } from 'src/api/utils/axios.utils';
 import { createHttpAsyncThunk, RootState } from 'src/app/store';
+import { sleep } from 'src/utils/common.utils';
+import { AssignRevokeResourcesDto } from '../../_data/types';
 import { FetchLicensesDto, LicenseDto } from '../data/dto';
 import { License, LicensesState } from '../data/types';
 
@@ -44,7 +46,7 @@ export const fetchLicenses = createHttpAsyncThunk<void, LicenseDto[], { state: R
   },
 );
 
-export const fetchLicensesByDeveloper = createHttpAsyncThunk<FetchLicensesDto, LicenseDto[], { state: RootState; rejectValue: HttpResponse }>(
+export const fetchLicensesByDeveloper = createHttpAsyncThunk<void, LicenseDto[], { state: RootState; rejectValue: HttpResponse }>(
   FEATURE_NAME + '/fetchLicensesByDeveloper',
   async (options, thunkApi) => {
     const { dispatch, getState } = thunkApi;
@@ -59,7 +61,9 @@ export const fetchLicensesByDeveloper = createHttpAsyncThunk<FetchLicensesDto, L
     let response;
 
     try {
-      response = await axios.request<LicenseDto[]>(config);
+      response = (await Promise.all([await sleep(1000), await axios.request<LicenseDto[]>(config)]))[1];
+      // r.then(v => v[1].)
+      //response = await axios.request<LicenseDto[]>(config);
     } catch (err) {
       return rejectRequest(err, thunkApi);
     }
@@ -73,6 +77,38 @@ export const fetchLicensesByDeveloper = createHttpAsyncThunk<FetchLicensesDto, L
     });
 
     return { status: response.status, data: responseData, mappedData: licenses } as HttpResponse<LicenseDto[], License[]>;
+  },
+);
+
+export const setLicenses = createHttpAsyncThunk<AssignRevokeResourcesDto, LicenseDto[], { state: RootState; rejectValue: HttpResponse }>(
+  FEATURE_NAME + '/setLicenses',
+  async (options, thunkApi) => {
+    const { dispatch, getState } = thunkApi;
+    const data = options?.body;
+
+    // Configuracion del servicio
+    const api = apis['GATEWAY'];
+    const resource = api.resources['DEVELOPERS_SET_LICENSES'];
+    const config = buildAxiosRequestConfig(api, resource, options);
+
+    // Llamado del servicio
+    let response;
+
+    try {
+      response = await axios.request<LicenseDto[]>(config);
+    } catch (err) {
+      return rejectRequest(err, thunkApi);
+    }
+
+    // Mapeo de la respuesta
+    const responseData = response.data;
+
+    const assets: License[] = response.data.map((a) => {
+      const { id, ...rest } = a;
+      return { key: id, ...rest };
+    });
+
+    return { status: response.status, data: responseData, mappedData: assets } as HttpResponse<LicenseDto[], License[]>;
   },
 );
 
@@ -115,6 +151,17 @@ const slice = createSlice({
       })
       .addCase(fetchLicensesByDeveloper.rejected, (state, action) => {
         state.data.fetchLicensesByDeveloper = { ...state.data.fetchLicenses, response: undefined, loading: false, error: action.payload };
+      });
+    builder
+      .addCase(setLicenses.pending, (state) => {
+        state.data.setLicenses = { loading: true };
+      })
+      .addCase(setLicenses.fulfilled, (state, action) => {
+        state.data.setLicenses = { ...state.data.setLicenses, response: action.payload, loading: false };
+        state.data.licensesByDeveloper = { ...state.data.licensesByDeveloper, [action.meta.arg.placeholders?.id!]: [...action.payload.mappedData!] };
+      })
+      .addCase(setLicenses.rejected, (state, action) => {
+        state.data.setLicenses = { ...state.data.setLicenses, response: undefined, loading: false, error: action.payload };
       });
   },
 });

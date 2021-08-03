@@ -99,6 +99,10 @@ export const getAccessToken = createHttpAsyncThunk<FetchAccessTokenDto, Pick<Ses
   },
 );
 
+export const validatePassword = (password?: string, repeatedPassword?: string) => {
+  return password && password === repeatedPassword;
+};
+
 //#endregion
 
 const initialState: AuthState = {

@@ -30,7 +30,7 @@ export const ContentHeader: React.FC<ContentHeaderProps> = React.memo((props) =>
   const wrapperContentClassName = classNames(styles.wrapperContent, pin ? styles.wrapperContentPinned : undefined);
   const className = classNames(UNSELECTABLE, props.className, styles.contentHeader);
 
-  const router = useAppSelector((state: RootState) => state.router);
+  const router = useAppSelector((s) => s.router);
 
   const getItem = (path: string, items: MenuItem[]): MenuChildItem | undefined => {
     for (let i = 0; i < items.length; i++) {

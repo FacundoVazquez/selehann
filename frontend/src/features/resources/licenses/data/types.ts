@@ -1,5 +1,6 @@
 import { RequestState } from 'src/features/_shared/data/interfaces';
 import { IElement } from 'src/types';
+import { AssignRevokeResourcesDto } from '../../_data/types';
 import { LicenseDto, FetchLicensesDto } from './dto';
 
 export interface LicensesState {
@@ -11,6 +12,7 @@ export interface DataState {
   licenses: License[];
   fetchLicensesByDeveloper: RequestState<FetchLicensesDto, LicenseDto[]>;
   licensesByDeveloper: { [key: string]: License[] };
+  setLicenses: RequestState<AssignRevokeResourcesDto, LicenseDto[]>;
 }
 
 export interface UIState {}

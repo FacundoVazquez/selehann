@@ -13,7 +13,7 @@ import { Message } from 'src/helpers/message.helper';
 import { Rules } from 'src/types';
 import { goToHomePage } from 'src/utils/history.utils';
 import { LoginDto, RegisterDto } from '../data/dto';
-import { login, register } from '../logic';
+import { login, register, validatePassword } from '../logic';
 import styles from './style.module.less';
 
 const { TabPane } = Tabs;
@@ -158,12 +158,19 @@ export const Login: React.FC = (props) => {
   };
 
   const registerUser = async (body: RegisterDto) => {
+    console.log(body);
+    if (!validatePassword(body?.password, body?.repeatedPassword)) {
+      Message.error(Texts.PASSWORDS_DOES_NOT_MATCH);
+      return;
+    }
+
     const result = await dispatch(register({ body }));
 
     if (register.fulfilled.match(result)) {
       goToHomePage();
       Message.success(Texts.LOGIN_SUCCESS);
     } else if (result.payload?.status! > 500) Message.error(Texts.SERVER_UNAVAILABLE);
+    else if (result.payload?.status! === 422) Message.error(Texts.USER_ALREADY_EXIST);
     else Message.error(Texts.REGISTER_FAILED);
   };
 

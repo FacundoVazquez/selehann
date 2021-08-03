@@ -15,7 +15,7 @@ export interface ObjectLiteral {
 }
 
 export interface IElement extends ObjectLiteral {
-  key: React.Key;
+  key: string;
 }
 
 export interface Rules {

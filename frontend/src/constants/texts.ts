@@ -41,6 +41,8 @@ export enum Texts {
   SERVER_UNAVAILABLE = 'Server unavailable!',
   LOGIN_SUCCESS = 'Logged in successfully!',
   LOGIN_FAILED = 'Invalid credentials!',
-  REGISTER_FAILED = 'User already exist!',
+  PASSWORDS_DOES_NOT_MATCH = "Passwords doesn't match!",
+  USER_ALREADY_EXIST = 'User already exist!',
+  REGISTER_FAILED = 'Error while register!',
   SESSION_EXPIRED = 'Session expired!',
 }

@@ -22,6 +22,7 @@ import { FetchLicensesDto } from 'src/features/resources/licenses/data/dto';
 import { FetchAssetsDto } from 'src/features/resources/assets/data/dto';
 import { fetchAssets, fetchAssetsByDeveloper } from 'src/features/resources/assets/logic';
 import { Message } from 'src/helpers/message.helper';
+import { sleep } from 'src/utils/common.utils';
 
 interface DevelopersState {
   expandedRow: Key;
@@ -53,9 +54,9 @@ const columns: ColumnTypeEx<Developer>[] = [
 
 export const Developers: React.FC = (props) => {
   const dispatch = useAppDispatch();
-  const developers = useAppSelector((state: RootState) => state.developers);
-  const { assets, licenses } = useAppSelector((state: RootState) => state);
-  const shared = useAppSelector((state: RootState) => state.shared);
+  const developers = useAppSelector((s) => s.developers);
+  // const { assets, licenses } = useAppSelector((s) => s);
+  const shared = useAppSelector((s) => s.shared);
 
   const [state, setState] = useState<DevelopersState>();
 
@@ -84,6 +85,10 @@ export const Developers: React.FC = (props) => {
     fetchAllResource();
   }, []);
 
+  /*   useEffect(() => {
+    console.log('*************');
+  }, [state]);
+ */
   //#endregion
 
   //#region Handlers
@@ -94,11 +99,11 @@ export const Developers: React.FC = (props) => {
     if (setDeveloperStatus.rejected.match(result)) Message.error(Texts.DEVELOPER_STATUS_ERROR);
   };
 
-  const handleOnPaginationChange = (current?: number, pageSize?: number) => {
+  /*   const handleOnPaginationChange = (current?: number, pageSize?: number) => {
     const paginator: Paginator = { current, pageSize };
     // dispatch(setPaginator(paginator));
   };
-
+ */
   //#endregion
 
   //#region Other functions
@@ -113,9 +118,17 @@ export const Developers: React.FC = (props) => {
     dispatch(fetchDevelopers({}));
   };
 
-  const fetchResourcesByDeveloper = async (placeholders?: FetchAssetsDto | FetchLicensesDto) => {
-    dispatch(fetchAssetsByDeveloper({ placeholders: { ...placeholders } }));
-    dispatch(fetchLicensesByDeveloper({ placeholders: { ...placeholders } }));
+  const fetchResourcesByDeveloper = async ({ id }: FetchAssetsDto | FetchLicensesDto) => {
+    /*     if (
+      (assets.data.assetsByDeveloper && assets.data.assetsByDeveloper![id]) ||
+      (licenses.data.licensesByDeveloper && licenses.data.licensesByDeveloper![id])
+    ) {
+      console.log('cached OK');
+      return;
+    } */
+    console.log('id>', id);
+    dispatch(fetchAssetsByDeveloper({ placeholders: { id } }));
+    dispatch(fetchLicensesByDeveloper({ placeholders: { id } }));
   };
 
   //#endregion
@@ -158,15 +171,20 @@ export const Developers: React.FC = (props) => {
             }
           }
           expandable={{
-            expandedRowRender: (record) => (
-              <ResourceComponent
-                titles={[Texts.AVAILABLE, Texts.ASSIGNED]}
-                currentDeveloper={`${record.key}`}
-                //  dataSources={{ [record.key]: assets.data.fetchAssets?.loading ? [] : assets.data.assets! }}
-                //   targetKeys={assets.data.fetchAssetsByDeveloper?.loading ? [] : [assets.data.assetsByDeveloper![record.key as any] as any]}
-              />
-            ),
+            expandedRowRender: (record) => {
+              return (
+                <ResourceComponent
+                  titles={[Texts.AVAILABLE, Texts.ASSIGNED]}
+                  currentDeveloper={`${state?.expandedRow}`}
+                  //  dataSources={{ [record.key]: assets.data.fetchAssets?.loading ? [] : assets.data.assets! }}
+                  //   targetKeys={assets.data.fetchAssetsByDeveloper?.loading ? [] : [assets.data.assetsByDeveloper![record.key as any] as any]}
+                />
+              );
+            },
             expandedRowKeys: state?.expandedRow ? [state?.expandedRow] : undefined,
+            rowExpandable: (record) => {
+              return developers.data.developers?.find((d) => d.key === record.key)?.active || false;
+            },
             onExpand: async (expanded, record) => {
               if (expanded) fetchResourcesByDeveloper({ id: record.key });
               setState((s) => ({ ...s, expandedRow: expanded ? record.key : '' }));

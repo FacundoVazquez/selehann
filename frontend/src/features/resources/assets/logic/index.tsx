@@ -5,6 +5,7 @@ import { HttpResponse } from 'src/api/types';
 import { buildAxiosRequestConfig } from 'src/api/utils/api.utils';
 import { rejectRequest } from 'src/api/utils/axios.utils';
 import { createHttpAsyncThunk, RootState } from 'src/app/store';
+import { sleep } from 'src/utils/common.utils';
 import { AssignRevokeResourcesDto } from '../../_data/types';
 import { AssetDto, FetchAssetsDto } from '../data/dto';
 import { Asset, AssetsState } from '../data/types';
@@ -45,7 +46,7 @@ export const fetchAssets = createHttpAsyncThunk<void, AssetDto[], { state: RootS
   },
 );
 
-export const fetchAssetsByDeveloper = createHttpAsyncThunk<FetchAssetsDto, AssetDto[], { state: RootState; rejectValue: HttpResponse }>(
+export const fetchAssetsByDeveloper = createHttpAsyncThunk<void, AssetDto[], { state: RootState; rejectValue: HttpResponse }>(
   FEATURE_NAME + '/fetchAssetsByDeveloper',
   async (options, thunkApi) => {
     const { dispatch, getState } = thunkApi;
@@ -60,7 +61,7 @@ export const fetchAssetsByDeveloper = createHttpAsyncThunk<FetchAssetsDto, Asset
     let response;
 
     try {
-      response = await axios.request<AssetDto[]>(config);
+      response = (await Promise.all([await sleep(1000), await axios.request<AssetDto[]>(config)]))[1];
     } catch (err) {
       return rejectRequest(err, thunkApi);
     }

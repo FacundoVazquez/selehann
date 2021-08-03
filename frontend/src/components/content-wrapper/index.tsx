@@ -16,7 +16,7 @@ interface ContentWrapperProps extends Pick<BasicComponentProps<HTMLDivElement>, 
 export const ContentWrapper: React.FC<ContentWrapperProps> = React.memo((props) => {
   const { className, children } = props;
 
-  const router = useAppSelector((state: RootState) => state.router);
+  const router = useAppSelector((s) => s.router);
 
   const [scroll, setScroll] = useState<Scroll>({ x: 0, y: 0 });
 

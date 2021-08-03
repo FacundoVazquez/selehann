@@ -4,7 +4,7 @@ export interface LoginDto {
 }
 
 export interface RegisterDto extends LoginDto {
-  repeatPassword: string;
+  repeatedPassword: string;
   role: string;
 }
 
