@@ -12,8 +12,8 @@ You work for ACME, a company that has a huge team of developers around the world
 You must create an App to give to an admin the possibility to manage the assets and licenses of the staff. This App will be made of an API and a UI. The requirements of each component will be listed below.
 
 ### API Required Endpoints
-- **Login admin user:** _As a user, I can login with my credentials to manage the company resources_.
-- **Add and disable developers:** _As an authenticated admin user, I can add new developers and or set them as inactive_.
+- **XX** > **Login admin user:** _As a user, I can login with my credentials to manage the company resources_.
+- **X** > **Add and disable developers:** _As an authenticated admin user, I can add new developers and or set them as inactive_.
 - **Get, Add and Delete of asset assignments:** _As an authenticated admin user, I can add, delete and list any developer's asset_.
 - **Get, Add, and delete of license assignments:** _As an authenticated admin user, I can add, delete and list any developer's license_.
 Important: When you disable any developer, you should revoke their assignments and clean them up.
