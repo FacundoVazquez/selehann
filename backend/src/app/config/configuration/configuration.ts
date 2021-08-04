@@ -1,6 +1,4 @@
-import { MongooseModuleOptions } from '@nestjs/mongoose';
 import { config } from 'dotenv';
-import { TypeOrmModuleOptions } from '../database/types';
 import { LogLevel, LogType } from '../logger/types';
 import { parseBoolean } from '../utils/types.utils';
 import { ConfigurationException } from './configuration.exception';

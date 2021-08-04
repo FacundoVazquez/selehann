@@ -19,6 +19,7 @@ export class RegisterDto {
   readonly repeatedPassword: string;
 
   @AutoMap()
-  @IsEnum(Role)
-  readonly role: Role;
+  @IsNotEmpty()
+  @IsString()
+  readonly role: string;
 }

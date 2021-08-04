@@ -12,6 +12,4 @@ import { LoggerModule } from './config/logger/logger.module';
 @Module({
   imports: [AutomapperModule, LoggerModule, MySqlDatabaseModule, AuthModule, UsersModule, DevelopersModule, AssetsModule, LicensesModule],
 })
-export class AppModule {
-  // constructor(private connection: Connection) {}
-}
+export class AppModule {}

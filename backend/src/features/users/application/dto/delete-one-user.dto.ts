@@ -1,9 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { IsMongoId, IsNotEmpty } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class DeleteOneUserDto {
   @AutoMap()
   @IsNotEmpty()
-  @IsMongoId()
+  @IsString()
   readonly id: string;
 }

@@ -1,11 +1,10 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEnum, NotEquals, ValidateIf } from 'class-validator';
-import { Role } from 'src/features/_shared/domain/roles/role.enum';
+import { IsEnum, IsString, NotEquals, ValidateIf } from 'class-validator';
 
 export class FindManyUserDto {
   @AutoMap()
-  @IsEnum(Role)
+  @IsString()
   @NotEquals(null)
   @ValidateIf((_, value) => value !== undefined)
-  readonly role?: Role;
+  readonly role?: string;
 }

@@ -20,8 +20,8 @@ export const mySqlDbConnection: TypeOrmModuleOptions = {
   migrationsRun: true,
   logging: configuration.databases.logger,
   //logger: configuration.databases.logger ? 'debug' : undefined,
-  synchronize: false,
-  dropSchema: false,
+  synchronize: true,
+  dropSchema: true,
 };
 
 console.log(mySqlDbConnection);

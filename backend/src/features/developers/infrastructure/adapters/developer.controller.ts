@@ -35,7 +35,7 @@ export class DeveloperController {
   }
 
   @Get()
-  async findMany(@Query() findManyDeveloperDto: FindManyDeveloperDto): Promise<DeveloperDto[]> {
+  async findMany(@Query() findManyDeveloperDto?: FindManyDeveloperDto): Promise<DeveloperDto[]> {
     return this.developerService.findDevelopers(findManyDeveloperDto);
   }
 

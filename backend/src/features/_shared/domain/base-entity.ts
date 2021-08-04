@@ -5,8 +5,8 @@ import { Persistable } from './persistable';
 
 export abstract class BaseEntity extends Persistable implements IEntity {
   @AutoMap()
-  /*  @PrimaryColumn() */
-  /*  @Generated('uuid') */
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
+  @Generated('uuid')
+  //  @PrimaryGeneratedColumn()
   id: string;
 }

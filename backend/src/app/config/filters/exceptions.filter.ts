@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, LoggerService } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { DatabaseException, DatabaseExceptionCode } from '../database/exceptions/database.exception';
 import { JsonResponse } from './types';
-import { TypeORMError } from 'typeorm';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
@@ -15,11 +15,13 @@ export class ExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = exception.message ?? 'An error occurred on the server!';
 
-    if (exception instanceof HttpException) {
-      status = exception.getStatus();
-    } else if (exception instanceof TypeORMError) {
+    if (exception instanceof DatabaseException) {
       status = HttpStatus.UNPROCESSABLE_ENTITY;
-      message = 'Error proccessing data!';
+
+      if (exception.code === DatabaseExceptionCode.ER_DUP_ENTRY) message = `${message}: Data already exist!`;
+      else message = `${message}: Error proccessing data!`;
+    } else if (exception instanceof HttpException) {
+      status = exception.getStatus();
     }
 
     const shouldLog = status >= 400;

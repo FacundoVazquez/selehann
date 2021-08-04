@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEnum, IsString, NotEquals, ValidateIf } from 'class-validator';
-import { Role } from 'src/features/_shared/domain/roles/role.enum';
+import { IsString, NotEquals, ValidateIf } from 'class-validator';
 
 export class UpdateUserDto {
   @AutoMap()
@@ -16,7 +15,6 @@ export class UpdateUserDto {
   readonly password?: string;
 
   @AutoMap()
-  //@IsEnum(Role)
   @NotEquals(null)
   @ValidateIf((_, value) => value !== undefined)
   readonly roleId?: string;

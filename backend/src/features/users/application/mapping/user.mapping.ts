@@ -2,8 +2,6 @@ import { InjectMapper } from '@automapper/nestjs';
 import type { Mapper } from '@automapper/types';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { Role } from 'src/features/_shared/domain/roles/role.enum';
-// import { Role } from '../../domain/entity/role.entity';
 import { User } from '../../domain/entities/user.entity';
 import { CreateUserDto, DeleteManyUserDto, DeleteOneUserDto, FindManyUserDto, FindOneUserDto, UpdateUserDto, UserDto } from '../dto';
 

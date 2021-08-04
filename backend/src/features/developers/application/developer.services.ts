@@ -6,7 +6,14 @@ import { LicenseMapping } from 'src/features/licenses/application/mapping/licens
 import { License } from 'src/features/licenses/domain/entities/license.entity';
 import { EntityManager, In } from 'typeorm';
 
-import { AssignResourceException, CreateDeveloperException, RevokeResourceException, SetDeveloperStatusException } from '../domain/developer.exceptions';
+import {
+  AssignResourceException,
+  CreateDeveloperException,
+  DeveloperNotFoundException,
+  RevokeResourceException,
+  SetDeveloperStatusException,
+  UnableUpdateUserInactiveException,
+} from '../domain/developer.exceptions';
 import { Developer } from '../domain/entities/developer.entity';
 import {
   CreateDeveloperDto,
@@ -39,7 +46,7 @@ export class DeveloperService {
     try {
       await this.manager.save(developer);
     } catch (err) {
-      throw new CreateDeveloperException(err.stack);
+      throw new CreateDeveloperException(err);
     }
 
     const developerDto = this.developerMapping.getDeveloperDto(developer);
@@ -105,7 +112,7 @@ export class DeveloperService {
       const result = developers.map((d) => this.developerMapping.getDeveloperDto(d));
       return result;
     } catch (err) {
-      throw new SetDeveloperStatusException(err.message);
+      throw new SetDeveloperStatusException(err);
     }
   }
 
@@ -113,16 +120,14 @@ export class DeveloperService {
     const id = findOneDeveloperDto.id;
     const resourceIds = assignResourceDto.resourceIds;
 
+    if (!(await this.isDeveloperActive(id))) throw new UnableUpdateUserInactiveException();
+
     try {
       await this.manager.createQueryBuilder().relation(Developer, propertyPath).of(id).add(resourceIds);
 
-      /*       const developer = await this.manager.findOne(Developer, id);
-      const result = this.developerMapping.getDeveloperDto(developer);
-      return result; */
-
       return this.mapResources(id, propertyPath);
-    } catch (error) {
-      throw new AssignResourceException(error.message);
+    } catch (err) {
+      throw new AssignResourceException(err);
     }
   }
 
@@ -130,13 +135,27 @@ export class DeveloperService {
     const id = findOneDeveloperDto.id;
     const resourceIds = revokeResourceDto.resourceIds;
 
+    if (!(await this.isDeveloperActive(id))) throw new UnableUpdateUserInactiveException();
+
     try {
       await this.manager.createQueryBuilder().relation(Developer, propertyPath).of(id).remove(resourceIds);
 
       return this.mapResources(id, propertyPath);
-    } catch (error) {
-      throw new RevokeResourceException(error.message);
+    } catch (err) {
+      throw new RevokeResourceException(err);
     }
+  }
+
+  private async isDeveloperActive(id: string) {
+    const developer = await this.manager.findOne(Developer, {
+      where: {
+        id,
+      },
+    });
+
+    if (!developer) throw new DeveloperNotFoundException(null, id);
+
+    return developer.active;
   }
 
   private async mapResources(developerId: string, propertyPath: string) {
