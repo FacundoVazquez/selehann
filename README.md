@@ -6,7 +6,7 @@
 
 # How to use / Assign and revoke assets and licenses
 
-1) Connect to the application localhost:3001.
+1) Connect to the application (frontend) localhost:3001.
 
 2) Register in the site.
 
