@@ -13,7 +13,7 @@ import { Router } from 'src/components/router';
 import { ServiceError } from 'src/components/service-error';
 import { APP_TITLE } from 'src/constants';
 import { Texts } from 'src/constants/texts';
-import { getAccessToken, logout } from 'src/features/auth/logic';
+import { getAccessToken, logout, setAuthenticated } from 'src/features/auth/logic';
 import { NavigatorMenu } from 'src/features/navigator-menu/ui';
 import { MenuItem, MenuParentItem } from 'src/features/navigator-menu/ui/types';
 import { Message } from 'src/helpers/message.helper';
@@ -40,33 +40,18 @@ export const menuItems: MenuItem[] = [{ view: views['Developers'], icon: <TeamOu
 
 export const App = () => {
   const dispatch = useAppDispatch();
-  const router = useAppSelector((s) => s.router);
-  const { accessToken, refreshToken } = useAppSelector((s) => s.auth.data.session) || {};
+  const location = useAppSelector((s) => s.router.location);
+  const { accessToken, refreshToken, authenticated } = useAppSelector((s) => s.auth.data.session) || {};
   const shared = useAppSelector((s) => s.shared);
-  const history = useHistory();
-  const [authenticated, setAuthenticated] = useState(false);
-
-  const fetchData = async () => {
-    console.log('fetchData');
-  };
 
   //#region UseEffect
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (hasError(shared)) {
-      fetchData();
-    }
     const validateToken = async () => {
       // Check if access token is expired or is null
       const accessTokenExpiredOrNull = tokenIsExpiredOrNull(accessToken);
       const refreshTokenExpiredOrNull = tokenIsExpiredOrNull(refreshToken);
 
-      console.log('useEffect - router.location.key', accessTokenExpiredOrNull, accessTokenExpiredOrNull);
-      console.log(router.location.pathname);
       // Check if access token is expired or is null
       if (accessTokenExpiredOrNull && !refreshTokenExpiredOrNull) {
         const result = await dispatch(getAccessToken({ body: { refreshToken: refreshToken! } }));
@@ -76,20 +61,20 @@ export const App = () => {
           goToAuthPage();
           Message.info(Texts.SESSION_EXPIRED);
         }
-      } else if (accessTokenExpiredOrNull && refreshTokenExpiredOrNull && !router.location.pathname.startsWith('/auth')) {
-        setAuthenticated(false);
+      } else if (accessTokenExpiredOrNull && refreshTokenExpiredOrNull && !location.pathname.startsWith('/auth')) {
+        dispatch(setAuthenticated(false));
         // Message.info('Session expired!');
         goToAuthPage();
       }
     };
 
     validateToken();
-  }, [router.location.key]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const isAuth = !tokenIsExpiredOrNull(accessToken);
-    console.log('useEffect - AccesToken', isAuth);
-    setAuthenticated(isAuth);
+
+    if (authenticated !== isAuth) dispatch(setAuthenticated(isAuth));
   }, [accessToken]);
 
   //#endregion
@@ -98,7 +83,7 @@ export const App = () => {
 
   const getTitle = () => {
     const view = Object.values(views).find((v) => {
-      return matchPath(router.location.pathname, {
+      return matchPath(location.pathname, {
         path: v.path,
         exact: true,
         strict: true,
@@ -122,8 +107,8 @@ export const App = () => {
         {authenticated && <Header className={styles.header} />}
         <Layout className={styles.main}>
           {authenticated && <NavigatorMenu items={menuItems} />}
-          <ContentWrapper className={styles.content} authenticated={authenticated}>
-            {isFetchingData(shared) ? <LoadingContent /> : hasError(shared) ? <ServiceError /> : <Router views={views} authenticated={authenticated} />}
+          <ContentWrapper className={styles.content} authenticated={authenticated!}>
+            {isFetchingData(shared) ? <LoadingContent /> : hasError(shared) ? <ServiceError /> : <Router views={views} authenticated={authenticated!} />}
           </ContentWrapper>
         </Layout>
       </Layout>

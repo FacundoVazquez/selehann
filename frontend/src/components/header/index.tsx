@@ -125,11 +125,10 @@ export const Header: React.FC<HeaderProps> = (props) => {
           className={styles.logout}
           src={exit}
           altsrc={exitHover}
-          alt="Salir"
           onClick={() => {
             dispatch(logout());
             goToAuthPage();
-            Message.info('Session finished!');
+            Message.info(Texts.SESSION_ENDED);
           }}
         />
       </div>

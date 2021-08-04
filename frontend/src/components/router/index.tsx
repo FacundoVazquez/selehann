@@ -47,7 +47,6 @@ export const Router: React.FC<RouterProps> = React.memo((props) => {
   };
 
   const redirectHomeIfUserAuthenticated = () => {
-    console.log(props.authenticated);
     if (props.authenticated) return <Redirect from="/auth" to={homePage} />;
   };
 

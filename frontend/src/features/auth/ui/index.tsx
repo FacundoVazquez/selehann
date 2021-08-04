@@ -104,14 +104,12 @@ export const Login: React.FC = (props) => {
     key: 'register',
     title: 'Register',
     formProps: {
+      initialValues: { role: 'admin' },
       className: styles.form,
       onFinish: (values) => {
-        console.log('Form finish!');
         registerUser(values);
       },
-      onFinishFailed: (errorInfo) => {
-        console.log('Form fail!');
-      },
+      onFinishFailed: (errorInfo) => {},
     } as FormProps<RegisterDto>,
     fields: [
       {
@@ -132,7 +130,7 @@ export const Login: React.FC = (props) => {
           className: styles.radioGroup,
           options: [
             { label: 'Admin', value: 'admin' },
-            { label: 'User', value: 'user' },
+            { label: 'User', value: 'user', disabled: true },
           ],
         },
       },
@@ -158,7 +156,6 @@ export const Login: React.FC = (props) => {
   };
 
   const registerUser = async (body: RegisterDto) => {
-    console.log(body);
     if (!validatePassword(body?.password, body?.repeatedPassword)) {
       Message.error(Texts.PASSWORDS_DOES_NOT_MATCH);
       return;

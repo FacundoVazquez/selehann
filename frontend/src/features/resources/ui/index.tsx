@@ -8,15 +8,16 @@ import { Texts } from 'src/constants/texts';
 import { FetchAssetsDto } from 'src/features/resources/assets/data/dto';
 import { Message } from 'src/helpers/message.helper';
 import { Asset } from '../assets/data/types';
-import { setAssets } from '../assets/logic';
-import { setLicenses } from '../licenses/logic';
+import { fetchAssetsByDeveloper, setAssets } from '../assets/logic';
+import { FetchLicensesDto } from '../licenses/data/dto';
+import { fetchLicensesByDeveloper, setLicenses } from '../licenses/logic';
 import { Resource } from '../types';
 import { AssignRevokeResourcesDto } from '../_data/types';
 
 interface ResourceComponentProps {
   titles?: string[];
   dataSources?: { [key: string]: Resource[] };
-  currentDeveloper: string;
+  developerId: string;
 }
 
 interface ResourcesComponentState {
@@ -42,60 +43,38 @@ const resourcePanels: ResourcePanelProps[] = [
 ];
 
 export const ResourceComponent: React.FC<ResourceComponentProps> = (props) => {
-  const { titles, dataSources, currentDeveloper } = props;
+  const { titles, dataSources, developerId } = props;
 
   const dispatch = useAppDispatch();
-  const developers = useAppSelector((s) => s.developers);
   const { assets, licenses } = useAppSelector((s) => s);
 
   const [state, setState] = useState<ResourcesComponentState>({
-    // currentDeveloper: ,
     currentPanel: resourcePanels[0].key,
     targetKeys: [],
     dataSources: {
       assets: assets.data.fetchAssets?.loading ? [] : assets.data.assets!,
       licenses: licenses.data.fetchLicenses?.loading ? [] : licenses.data.licenses!,
     },
-    // dataSources: dataSources,
   });
 
-  //#region UseEffects
-  /* 
   useEffect(() => {
-    console.log('aaaaa');
+    if (developerId) fetchResourcesByDeveloper(developerId);
   }, []);
 
   useEffect(() => {
-    setResources();
-    console.log('bbb');
-  }, [state.currentPanel]);
- */
-  useEffect(() => {
-    console.log(currentDeveloper, assets.data.assetsByDeveloper, `${currentDeveloper && assets.data.assetsByDeveloper}`);
-    if (currentDeveloper && assets.data.assetsByDeveloper) {
-      setResources();
-      //    console.log('cccc');
+    // Update assigned resources
+    if ((developerId && assets.data.assetsByDeveloper) || (developerId && licenses.data.licensesByDeveloper)) {
+      setAssignedResources();
     }
-  }, [assets.data.assetsByDeveloper]);
+  }, [state.currentPanel, assets.data.assetsByDeveloper, licenses.data.licensesByDeveloper]);
 
-  useEffect(() => {
-    if (currentDeveloper && licenses.data.licensesByDeveloper) {
-      setResources();
-      //  console.log('dddd');
-    }
-  }, [licenses.data.licensesByDeveloper]);
-
-  /*   useEffect(() => {
-    //const assigned = developers.data.setDeveloperStatus?.response?.mappedData
-    setState((s) => ({ ...s, targetKeys: [] }));
- 
-  }, [developers.data.setDeveloperStatus?.response?.mappedData]);
- */
   //#endregion
 
   //#region Handlers
 
   const handlerPanels = (activeKey: string) => {
+    if (state.currentPanel === activeKey) return;
+
     setState((s) => ({
       ...s,
       currentPanel: activeKey,
@@ -108,7 +87,7 @@ export const ResourceComponent: React.FC<ResourceComponentProps> = (props) => {
     };
 
     const placeholders = {
-      id: currentDeveloper,
+      id: developerId,
       action: direction === 'right' ? 'assign' : 'revoke',
     };
 
@@ -126,13 +105,25 @@ export const ResourceComponent: React.FC<ResourceComponentProps> = (props) => {
 
   //#region Other functions
 
-  const setResources = () => {
+  const fetchResourcesByDeveloper = async (id: string) => {
+    if (
+      (assets.data.assetsByDeveloper && assets.data.assetsByDeveloper![id]) ||
+      (licenses.data.licensesByDeveloper && licenses.data.licensesByDeveloper![id])
+    ) {
+      return;
+    }
+
+    dispatch(fetchAssetsByDeveloper({ placeholders: { id } }));
+    dispatch(fetchLicensesByDeveloper({ placeholders: { id } }));
+  };
+
+  const setAssignedResources = () => {
     const resourcesByDeveloper =
       state.currentPanel === resourcePanels[0].key
-        ? (assets.data.assetsByDeveloper! ?? {})[currentDeveloper]
-        : (licenses.data.licensesByDeveloper! ?? {})[currentDeveloper];
+        ? (assets.data.assetsByDeveloper ?? {})[developerId]
+        : (licenses.data.licensesByDeveloper ?? {})[developerId];
 
-    // if (!resourcesByDeveloper || resourcesByDeveloper.length === 0) return;
+    if (!resourcesByDeveloper) return;
 
     setState((s) => ({
       ...s,

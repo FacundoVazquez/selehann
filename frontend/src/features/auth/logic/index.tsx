@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apis } from 'src/api/setup/api-list.config';
 import { HttpResponse } from 'src/api/types';
@@ -106,14 +106,16 @@ export const validatePassword = (password?: string, repeatedPassword?: string) =
 //#endregion
 
 const initialState: AuthState = {
-  data: {},
-  ui: {},
+  data: { session: { authenticated: false, accessToken: '', refreshToken: '', username: '' } },
 };
 
 const slice = createSlice({
   name: FEATURE_NAME,
   initialState,
   reducers: {
+    setAuthenticated(state, payload: PayloadAction<boolean>) {
+      state.data.session.authenticated = payload.payload;
+    },
     logout() {
       return initialState;
     },
@@ -125,7 +127,7 @@ const slice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.data.login = { ...state.data.login, response: action.payload, loading: false };
-        state.data.session = { ...action.payload.data!, username: getPayloadProperty(action.payload.data?.accessToken!, 'username') };
+        state.data.session = { ...action.payload.data!, authenticated: true, username: getPayloadProperty(action.payload.data?.accessToken!, 'username') };
       })
       .addCase(login.rejected, (state, action) => {
         state.data.login = { ...state.data.login, response: undefined, loading: false, error: action.payload };
@@ -136,7 +138,7 @@ const slice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.data.register = { ...state.data.register, response: action.payload, loading: false };
-        state.data.session = { ...action.payload.data!, username: getPayloadProperty(action.payload.data?.accessToken!, 'username') };
+        state.data.session = { ...action.payload.data!, authenticated: true, username: getPayloadProperty(action.payload.data?.accessToken!, 'username') };
       })
       .addCase(register.rejected, (state, action) => {
         state.data.register = { ...state.data.register, response: undefined, loading: false, error: action.payload };
@@ -155,8 +157,8 @@ const slice = createSlice({
   },
 });
 
-const { logout } = slice.actions;
+const { setAuthenticated, logout } = slice.actions;
 
-export { logout };
+export { setAuthenticated, logout };
 
 export default slice.reducer;

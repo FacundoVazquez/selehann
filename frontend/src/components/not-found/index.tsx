@@ -9,10 +9,10 @@ export const NotFound: React.FC = (props) => {
       <Result
         status="404"
         title="404"
-        subTitle="El contenido no existe."
+        subTitle="Content not found"
         extra={
           <Button type="primary" onClick={goToHomePage}>
-            Ir al Inicio
+            Home
           </Button>
         }
       />

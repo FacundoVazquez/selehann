@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apis } from 'src/api/setup/api-list.config';
 import { HttpResponse } from 'src/api/types';
@@ -126,6 +126,11 @@ const slice = createSlice({
     cleanState() {
       return initialState;
     },
+    revokeAssetsByDeveloper(state, action: PayloadAction<string>) {
+      const filteredDevelopersAssets = { ...state.data.assetsByDeveloper };
+      filteredDevelopersAssets[action.payload] = [];
+      state.data.assetsByDeveloper = { ...filteredDevelopersAssets };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -164,8 +169,8 @@ const slice = createSlice({
   },
 });
 
-const { cleanState } = slice.actions;
+const { cleanState, revokeAssetsByDeveloper } = slice.actions;
 
-export { cleanState };
+export { cleanState, revokeAssetsByDeveloper };
 
 export default slice.reducer;

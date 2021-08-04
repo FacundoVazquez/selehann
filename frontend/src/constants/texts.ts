@@ -11,6 +11,7 @@ export enum Texts {
   NO = 'No',
   ADD = 'Add',
   SAVE = 'Save',
+  CONFIRM = 'Confirm',
   CANCEL = 'Cancel',
   EDIT = 'Edit',
   DELETE = 'Delete',
@@ -28,12 +29,17 @@ export enum Texts {
   REGISTRIES = 'Items',
   /////
   USER = 'User',
+  FULL_NAME = 'Full name',
   DEVELOPER_NAME = 'Developer',
   DEVELOPER_STATUS = 'Status',
   /////
   SAVE_REGISTRY_SUCCESS = 'Item added!',
   UPDATE_REGISTRY_SUCCESS = 'Item updated!',
   FIELDS_VALIDATION_FAILURE = 'Validation error!',
+  FIELD_REQUIRED = 'Field required!',
+  ADD_DEVELOPER = 'Add developer',
+  DEVELOPER_ADD_OK = 'Developer add successfully!',
+  DEVELOPER_ADD_ERROR = 'Error while add developer!',
   /////
   DEVELOPER_STATUS_ERROR = 'Error while updating status!',
   DEVELOPER_RESOURCE_ERROR = 'Error while updating resources!',
@@ -44,5 +50,6 @@ export enum Texts {
   PASSWORDS_DOES_NOT_MATCH = "Passwords doesn't match!",
   USER_ALREADY_EXIST = 'User already exist!',
   REGISTER_FAILED = 'Error while register!',
-  SESSION_EXPIRED = 'Session expired!',
+  SESSION_EXPIRED = 'Session has expired!',
+  SESSION_ENDED = 'Session has ended!',
 }

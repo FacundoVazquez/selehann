@@ -1,32 +1,21 @@
-import { Popconfirm, Switch, Tag } from 'antd';
-import React, { Key, useEffect, useState } from 'react';
-import { RootState } from 'src/app/store';
+import { Popconfirm, Switch } from 'antd';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/app/store/store.hooks';
 import { LoadingContent } from 'src/components/loading';
 import { ServiceError } from 'src/components/service-error';
-import { ColumnTypeEx, Table } from 'src/components/table';
+import { ColumnTypeEx } from 'src/components/table';
 import { Wrapper } from 'src/components/wrapper';
 import { Texts } from 'src/constants/texts';
-import { Paginator } from 'src/features/_shared/data/interfaces';
+import { fetchAssets, revokeAssetsByDeveloper } from 'src/features/resources/assets/logic';
+import { fetchLicenses, revokeLicensesByDeveloper } from 'src/features/resources/licenses/logic';
+import { Message } from 'src/helpers/message.helper';
 import { hasError, isFetchingData } from 'src/helpers/validation.helper';
 import { getViewWidth } from 'src/utils/screen.utils';
 import { compare } from 'src/utils/string.utils';
 import { FetchDevelopersDto, SetDeveloperStatusDto } from '../data/dto';
 import { Developer } from '../data/types';
 import { fetchDevelopers, setDeveloperStatus } from '../logic';
-import { ResourceComponent } from '../../resources/ui';
-import styles from './style.module.less';
-import { Resource } from 'src/api/types';
-import { fetchLicenses, fetchLicensesByDeveloper } from 'src/features/resources/licenses/logic';
-import { FetchLicensesDto } from 'src/features/resources/licenses/data/dto';
-import { FetchAssetsDto } from 'src/features/resources/assets/data/dto';
-import { fetchAssets, fetchAssetsByDeveloper } from 'src/features/resources/assets/logic';
-import { Message } from 'src/helpers/message.helper';
-import { sleep } from 'src/utils/common.utils';
-
-interface DevelopersState {
-  expandedRow: Key;
-}
+import { TableDevelopers } from './table.developers';
 
 const columns: ColumnTypeEx<Developer>[] = [
   {
@@ -54,11 +43,8 @@ const columns: ColumnTypeEx<Developer>[] = [
 
 export const Developers: React.FC = (props) => {
   const dispatch = useAppDispatch();
-  const developers = useAppSelector((s) => s.developers);
-  // const { assets, licenses } = useAppSelector((s) => s);
-  const shared = useAppSelector((s) => s.shared);
 
-  const [state, setState] = useState<DevelopersState>();
+  const shared = useAppSelector((s) => s.shared);
 
   const mergedColumns = columns.map((column) => {
     if (column.key !== 'active') return column;
@@ -81,14 +67,9 @@ export const Developers: React.FC = (props) => {
   //#region UseEffects
 
   useEffect(() => {
-    fetchDevelopersData();
-    fetchAllResource();
+    fetchAllResources();
   }, []);
 
-  /*   useEffect(() => {
-    console.log('*************');
-  }, [state]);
- */
   //#endregion
 
   //#region Handlers
@@ -96,39 +77,24 @@ export const Developers: React.FC = (props) => {
   const handleDeveloperStatus = async (body: SetDeveloperStatusDto) => {
     const result = await dispatch(setDeveloperStatus({ body }));
 
+    if (setDeveloperStatus.fulfilled.match(result)) {
+      body.developerIds.forEach((id) => {
+        dispatch(revokeAssetsByDeveloper(id));
+        dispatch(revokeLicensesByDeveloper(id));
+      });
+    }
+
     if (setDeveloperStatus.rejected.match(result)) Message.error(Texts.DEVELOPER_STATUS_ERROR);
   };
 
-  /*   const handleOnPaginationChange = (current?: number, pageSize?: number) => {
-    const paginator: Paginator = { current, pageSize };
-    // dispatch(setPaginator(paginator));
-  };
- */
   //#endregion
 
   //#region Other functions
 
-  const fetchDevelopersData = async (body?: FetchDevelopersDto) => {
-    dispatch(fetchDevelopers({ body }));
-  };
-
-  const fetchAllResource = async () => {
+  const fetchAllResources = () => {
+    dispatch(fetchDevelopers({}));
     dispatch(fetchAssets({}));
     dispatch(fetchLicenses({}));
-    dispatch(fetchDevelopers({}));
-  };
-
-  const fetchResourcesByDeveloper = async ({ id }: FetchAssetsDto | FetchLicensesDto) => {
-    /*     if (
-      (assets.data.assetsByDeveloper && assets.data.assetsByDeveloper![id]) ||
-      (licenses.data.licensesByDeveloper && licenses.data.licensesByDeveloper![id])
-    ) {
-      console.log('cached OK');
-      return;
-    } */
-    console.log('id>', id);
-    dispatch(fetchAssetsByDeveloper({ placeholders: { id } }));
-    dispatch(fetchLicensesByDeveloper({ placeholders: { id } }));
   };
 
   //#endregion
@@ -138,62 +104,6 @@ export const Developers: React.FC = (props) => {
   const hasContentError = hasError(shared);
 
   //#region Renders
-
-  const renderTable = () => {
-    return (
-      <Wrapper contentBody direction="row" horizontal="center">
-        <Table
-          rowKey={'key'}
-          className={styles.table}
-          size={'small'}
-          scroll={{ y: '500px' }}
-          fill
-          columns={mergedColumns}
-          dataSource={developers?.data?.developers}
-          loading={developers.data.fetchDevelopers?.loading}
-          hideRowSelection
-          extraColumns={{ showKeyColumn: true, showActionsColumn: false }}
-          extraComponents={[
-            {
-              key: 'records-count-tag',
-              node: 'records-count-tag',
-              position: 'top',
-              style: { marginLeft: 'auto', display: 'table' },
-            },
-          ]}
-          sortable
-          pagination={
-            {
-              /*  current: developers.data.paginator?.current,
-            pageSize: developers.data.paginator?.pageSize,
-            total: developers.data.paginator?.total,
-            onChange: handleOnPaginationChange, */
-            }
-          }
-          expandable={{
-            expandedRowRender: (record) => {
-              return (
-                <ResourceComponent
-                  titles={[Texts.AVAILABLE, Texts.ASSIGNED]}
-                  currentDeveloper={`${state?.expandedRow}`}
-                  //  dataSources={{ [record.key]: assets.data.fetchAssets?.loading ? [] : assets.data.assets! }}
-                  //   targetKeys={assets.data.fetchAssetsByDeveloper?.loading ? [] : [assets.data.assetsByDeveloper![record.key as any] as any]}
-                />
-              );
-            },
-            expandedRowKeys: state?.expandedRow ? [state?.expandedRow] : undefined,
-            rowExpandable: (record) => {
-              return developers.data.developers?.find((d) => d.key === record.key)?.active || false;
-            },
-            onExpand: async (expanded, record) => {
-              if (expanded) fetchResourcesByDeveloper({ id: record.key });
-              setState((s) => ({ ...s, expandedRow: expanded ? record.key : '' }));
-            },
-          }}
-        />
-      </Wrapper>
-    );
-  };
 
   //#endregion
 
@@ -206,7 +116,7 @@ export const Developers: React.FC = (props) => {
       horizontal="center"
       style={{ minWidth: getViewWidth(isContentLoading || hasContentError) }}>
       {/*   {isContentLoading ? <LoadingContent /> : renderTable()} */}
-      {isContentLoading ? <LoadingContent /> : hasContentError ? <ServiceError /> : renderTable()}
+      {isContentLoading ? <LoadingContent /> : hasContentError ? <ServiceError /> : <TableDevelopers columns={mergedColumns} />}
     </Wrapper>
   );
 };

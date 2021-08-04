@@ -315,7 +315,7 @@ export const Table = <RecordType extends IElement = any>(props: TablePropsEx<Rec
 
     const key = `${dataSource.length + 1}`;
     const record: RecordType = { key } as RecordType;
-    const sort: SorterResult<RecordType> = { columnKey: 'key', order: undefined };
+    const sort: SorterResult<RecordType> = { columnKey: rowKey, order: undefined };
 
     onDataChange([...dataSource, record]);
 

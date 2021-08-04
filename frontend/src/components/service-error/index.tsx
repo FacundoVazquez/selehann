@@ -10,9 +10,9 @@ export const ServiceError: React.FC = (props) => {
   const renderSubtitle = () => {
     return (
       <div>
-        <span>El contenido no pudo ser cargado porque uno o más servicios no están disponibles.</span>
+        <span>Content can't be loaded. Service unavailable</span>
         <br />
-        <span>Por favor, intente de vuelta más tarde.</span>
+        <span>Please, try later</span>
       </div>
     );
   };
@@ -27,11 +27,11 @@ export const ServiceError: React.FC = (props) => {
       <Result
         style={{ minWidth: 400, height: '100%' }}
         status="error"
-        title="Error al cargar contenido"
+        title="Error"
         subTitle={renderSubtitle()}
         extra={
           <Button type="primary" onClick={refresh}>
-            Volver a Cargar
+            Refresh
           </Button>
         }
       />

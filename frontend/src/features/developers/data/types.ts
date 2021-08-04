@@ -1,6 +1,6 @@
 import { RequestState } from 'src/features/_shared/data/interfaces';
 import { IElement } from 'src/types';
-import { DeveloperDto, FetchDevelopersDto, SetDeveloperStatusDto } from './dto';
+import { AddDeveloperDto, DeveloperDto, FetchDevelopersDto, SetDeveloperStatusDto } from './dto';
 
 export interface DevelopersState {
   data: Partial<DataState>;
@@ -9,6 +9,7 @@ export interface DevelopersState {
 export interface DataState {
   fetchDevelopers: RequestState<FetchDevelopersDto, DeveloperDto[]>;
   setDeveloperStatus: RequestState<SetDeveloperStatusDto, DeveloperDto[]>;
+  addDeveloper: RequestState<AddDeveloperDto, DeveloperDto>;
   developers: Developer[];
 }
 

@@ -13,6 +13,7 @@ export const apis: APIList = {
       AUTH_TOKEN: { path: 'auth/token', config: { verb: 'POST' } },
       USERS_GET_ONE: { path: 'users/:id', config: { verb: 'GET' } },
       USERS_GET_MANY: { path: 'users', config: { verb: 'GET' } },
+      DEVELOPERS_ADD: { path: 'developers', config: { verb: 'POST' } },
       DEVELOPERS_GET_MANY: { path: 'developers', config: { verb: 'GET' } },
       DEVELOPERS_SET_STATUS: { path: 'developers/set/status', config: { verb: 'POST' } },
       DEVELOPERS_SET_ASSETS: { path: 'developers/:id/:action/assets', config: { verb: 'PUT' } },
