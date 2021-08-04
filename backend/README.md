@@ -11,6 +11,10 @@ $ cd ../salehann/backend
 $ yarn
 ```
 
+## **Important: requires a MySQL instance to connect. Also needs to create a database called 'selehann'**
+
+#
+
 ## Running the app
 
 ```bash
@@ -21,10 +25,29 @@ $ yarn start
 $ yarn start:prod
 ```
 
+## Running the app with docker
+
+```bash
+$ docker build -t selehann_backend .
+
+$ docker-compose up -d
+
+#Create database (from host terminal)
+
+$ docker exec -it mysql-db mysql -p
+
+# Then enter password 'root'
+
+mysql> create database selehann;
+```
+
 ## Test
 
 ```bash
 # (some) unit tests
 $ yarn test
-
 ```
+
+## Swagger
+
+http://localhost:3000/api/swagger/

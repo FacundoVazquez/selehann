@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsEnum, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { AssetType } from 'src/features/_shared/domain/assets/asset.enum';
 
 export class AssetDto {
@@ -13,6 +13,5 @@ export class AssetDto {
   @IsString()
   readonly model: string;
   @AutoMap()
-  @IsEnum(AssetType)
   readonly type: AssetType;
 }

@@ -9,7 +9,7 @@ networks:
 
 services:
   app:
-    image: 'salehann_backend:1.0.0'
+    image: 'selehann_backend'
     volumes:
       - .env/:/app/.env
     ports:
@@ -35,6 +35,6 @@ services:
     expose:
       - '3306'
     ports:
-      - '3306:3306'
+      - '3307:3306'
     networks:
       - net01
