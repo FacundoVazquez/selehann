@@ -1,6 +1,6 @@
 # Setup
 
-#### Inside the folders backend and frontend there are the readme files about them setups.
+#### Inside backend and frontend folders there are the readme files about them setups.
 
 #
 
