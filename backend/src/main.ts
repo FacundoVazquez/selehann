@@ -7,6 +7,7 @@ import { options, setupGlobalOptions } from './app/config/config';
 import { configuration } from './app/config/configuration/configuration';
 import { setupSwagger } from './app/config/swagger';
 //a
+//b
 declare const module: any;
 
 async function bootstrap() {
