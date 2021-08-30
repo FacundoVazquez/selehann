@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '../database/types';
 import { LogLevel, LogType } from '../logger/types';
-//aa
+
 export interface ObjectConfiguration {
   port: number;
   databases: {
