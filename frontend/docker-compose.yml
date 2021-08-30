@@ -4,7 +4,7 @@ services:
   app:
     image: 'salehann_frontend:1.0.0'
     ports:
-      - '80:80'
+      - '3001:3001'
     restart: always
     environment:
       - ENVIRONMENT=PRODUCTION

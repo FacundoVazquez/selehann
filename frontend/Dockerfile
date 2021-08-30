@@ -22,5 +22,5 @@ COPY ["config/nginx", "/etc/nginx"]
 # Copy the default nginx.conf provided by tiangolo/node-frontend
 # COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80 
+EXPOSE 3001 
 CMD ["nginx", "-g", "daemon off;"]

@@ -13,5 +13,6 @@ export class AssetDto {
   @IsString()
   readonly model: string;
   @AutoMap()
+  @IsString()
   readonly type: AssetType;
 }
