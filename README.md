@@ -1,14 +1,12 @@
 # Setup
 
-#### Inside the folders backend and frontend there are the readme files about them setups.
+#### Inside backend and frontend folders there are the readme files about them setups.
 
 #
 
 # How to use / Assign and revoke assets and licenses
 
-First of all you need to connect to the application by localhost:3001. Then:
-
-1) Connect to the application localhost:3001.
+1) Connect to the application (frontend) localhost:3001.
 
 2) Register in the site.
 
